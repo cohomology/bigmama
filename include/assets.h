@@ -10,12 +10,14 @@ namespace bigmama
 class AssetNotFound : public std::exception
 {
 public:
-  AssetNotFound(const char * msg)
-    : m_msg(msg)
+  AssetNotFound(const char * asset)
+    : m_msg(std::string("Error: Could not find asset: \"") + asset + "\"")
   { }
 
   const char * what() const throw() override
-  { return m_msg.c_str(); }
+  { 
+    return m_msg.c_str(); 
+  }
 
 private:
   std::string m_msg;

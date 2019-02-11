@@ -1,0 +1,7 @@
+{
+  "wall_types" = ["stone_grey.png"],
+  "walls" = { 
+    { "wall_type" : 0,
+      "x"         : 0,
+      "y"         : 0 }
+}

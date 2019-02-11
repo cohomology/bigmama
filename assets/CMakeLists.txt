@@ -2,6 +2,7 @@ find_package(SevenZip REQUIRED)
 
 list(APPEND BIGMAMA_RESOURCE_FILES
   ${CMAKE_SOURCE_DIR}/assets/stone_grey.png
+  ${CMAKE_SOURCE_DIR}/assets/level1.json
 )
 
 add_custom_command(OUTPUT bigmama.pak
