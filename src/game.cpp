@@ -1,4 +1,5 @@
 #include "game.h"
+#include "assets.h"
 
 #include <SFML/OpenGL.hpp>
 
@@ -6,9 +7,9 @@ namespace bigmama
 {
 
 Game::Game(const AssetLibrary& assets)
-  : m_settings(16, 8, 8, 3, 0), m_mode(1920, 1080), 
-    m_window(m_mode, "bigmama", sf::Style::Fullscreen, m_settings),
-    m_assets(assets)
+  : m_settings{16, 8, 8, 3, 0}, m_mode{1920, 1080}, 
+    m_window{m_mode, "bigmama", sf::Style::Fullscreen, m_settings},
+    m_assets{assets}
 {
   m_window.setVerticalSyncEnabled(true);
   m_window.setActive(true); 
@@ -47,6 +48,16 @@ void Game::display()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   m_window.clear(sf::Color::White);
+
+  ::sf::Texture texture;
+  Asset asset = m_assets.get("stone_grey.png");
+  texture.loadFromMemory(asset.data(), asset.size());
+
+  ::sf::Sprite sprite;
+  sprite.setTexture(texture);
+
+  m_window.draw(sprite);
+
   m_window.display(); 
 }
 

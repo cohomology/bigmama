@@ -17,7 +17,7 @@ int main(int argc, const char *argv[])
     std::cerr << "Unable to open output file: \"" << argv[2] << endl;
     exit(-1);
   } 
-  output << "static const unsigned char data[] = {" << endl;
+  output << "static const unsigned char assetData[] = {" << endl;
   unsigned int counter = 0;
   const char bin2hexLookUp[] = "0123456789abcdef"; 
   char current;
