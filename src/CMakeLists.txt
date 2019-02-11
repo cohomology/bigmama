@@ -12,7 +12,7 @@ find_package(PhysFS REQUIRED)
 find_package(Boost COMPONENTS system filesystem REQUIRED)
 
 add_custom_command(OUTPUT bigmama.pak.cpp
-  DEPENDS bigmama.pak.trg bin2c 
+  DEPENDS bigmama.pak.trg bin2c ${CMAKE_CURRENT_BINARY_DIR}/../assets/bigmama.pak  
   COMMAND ${CMAKE_CURRENT_BINARY_DIR}/../assets/bin2c ${CMAKE_CURRENT_BINARY_DIR}/../assets/bigmama.pak 
           ${CMAKE_CURRENT_BINARY_DIR}/bigmama.pak.cpp)
 
