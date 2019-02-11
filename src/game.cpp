@@ -1,5 +1,7 @@
 #include "game.h"
 
+#include <SFML/OpenGL.hpp>
+
 namespace bigmama
 {
 

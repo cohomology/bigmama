@@ -1,4 +1,6 @@
-#include "physfs.h"
+#include "assets.h"
+
+#include <physfs.h>
 
 namespace bigmama
 {
