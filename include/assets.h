@@ -47,6 +47,8 @@ public:
   AssetLibrary(const char * calledProgram);
   ~AssetLibrary();
   Asset get(const char * asset) const;
+  Asset get(const std::string& asset) const
+  { return this->get(asset.c_str()); }
 }; 
 
 } // namespace bigmama
