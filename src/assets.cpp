@@ -2,6 +2,8 @@
 
 #include <physfs.h>
 
+#include "bigmama.pak.cpp"
+
 namespace bigmama
 {
 
