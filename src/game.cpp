@@ -1,6 +1,7 @@
 #include "game.h"
 #include "assets.h"
 #include "state.h"
+#include "screen.h"
 
 #include <SFML/OpenGL.hpp>
 
@@ -8,10 +9,11 @@ namespace bigmama
 {
 
 Game::Game(const AssetLibrary& assets,
+           const Screen& screen,
            State& state)
-  : m_settings{16, 8, 8, 3, 0}, m_mode{1920, 1080}, 
+  : m_settings{16, 8, 8, 3, 0}, m_mode{screen.width(), screen.height()}, 
     m_window{m_mode, "bigmama", sf::Style::Fullscreen, m_settings},
-    m_assets{assets}, m_state{state}
+    m_assets{assets}, m_screen{screen}, m_state{state} 
 {
   m_window.setVerticalSyncEnabled(true);
   m_window.setActive(true); 

@@ -10,6 +10,7 @@ namespace bigmama
 {
 
 class AssetLibrary;
+class Screen;
 
 class Element
 {
@@ -31,14 +32,26 @@ class State
 {
 public:
   State(const AssetLibrary& library,
+        const Screen& screen,
         unsigned int level = 1);
   void reload(unsigned int level);
   void drawWalls(::sf::RenderWindow& window);
+  unsigned int width() const
+  { return m_width; }
+  unsigned int height() const
+  { return m_height; }
 private:
+  void computeLevelBoundingBox(); 
+
   const AssetLibrary&     m_library;
+  const Screen&           m_screen;
   std::vector<TexturePtr> m_textures;
   std::vector<ElementPtr> m_elements;
   unsigned int            m_level;
+  unsigned int            m_width;
+  unsigned int            m_height;
+  ::sf::IntRect           m_drawingArea;
+  unsigned int            m_gridSize; 
 };
 
 }

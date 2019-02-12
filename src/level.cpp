@@ -87,9 +87,4 @@ unsigned int Level::height() const
   return m_root["height"].asUInt(); 
 } 
 
-unsigned int Level::grid_size() const
-{ 
-  return m_root["grid_size"].asUInt(); 
-} 
-
 }

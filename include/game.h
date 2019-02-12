@@ -8,11 +8,13 @@ namespace bigmama
 
 class AssetLibrary;
 class State;
+class Screen;
 
 class Game
 {
 public:
   Game(const AssetLibrary& library,
+       const Screen& screen,
        State& state);
   void run();
 private:
@@ -26,6 +28,7 @@ private:
   ::sf::VideoMode       m_mode;
   ::sf::RenderWindow    m_window;
   const AssetLibrary&   m_assets;
+  const Screen&         m_screen;
   State&                m_state; 
 }; 
 

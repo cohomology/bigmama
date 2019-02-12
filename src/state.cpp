@@ -1,5 +1,6 @@
 #include "state.h"
 #include "level.h"
+#include "screen.h"
 
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/Sprite.hpp> 
@@ -18,7 +19,7 @@ Element::Element(const TexturePtr texture,
   sf::Vector2u size = texture->getSize(); 
   m_sprite.setPosition(m_rectangle.left, m_rectangle.top); 
   m_sprite.setScale(static_cast<float>(m_rectangle.width) / size.x, 
-                  static_cast<float>(m_rectangle.height) / size.y);  
+                    static_cast<float>(m_rectangle.height) / size.y);  
 }
 
 void Element::draw(::sf::RenderWindow& window) 
@@ -27,9 +28,11 @@ void Element::draw(::sf::RenderWindow& window)
 }
 
 State::State(const AssetLibrary& library,
+             const Screen& screen, 
              unsigned int level) 
-  : m_library(library), m_textures(), m_elements(),
-  m_level(level)
+  : m_library{library}, m_screen{screen}, m_textures{},
+  m_elements{}, m_level{level}, m_width{0}, m_height{0}, 
+  m_drawingArea{}, m_gridSize{0}
 {
   reload(level);
 }
@@ -37,26 +40,40 @@ State::State(const AssetLibrary& library,
 void State::reload(unsigned int levelNr)
 {
   Level level(m_library, levelNr);
-  for (auto texture : level.textures())
-    m_textures.push_back(texture);
+  m_width = level.width();
+  m_height = level.height();
+  computeLevelBoundingBox();  
+  std::copy(level.textures().begin(), level.textures().end(),
+      std::back_inserter(m_textures));
   for (auto wall : level.walls())
   {
     assert(wall.texture < m_textures.size());
     m_elements.push_back(std::make_unique<Element>(
           m_textures[wall.texture], 
           typename ::sf::IntRect(
-            level.grid_size()*wall.x,
-            level.grid_size()*wall.y,
-            level.grid_size(),
-            level.grid_size())));
+            m_drawingArea.left + m_gridSize * wall.x,
+            m_drawingArea.top + m_gridSize * wall.y,
+            m_gridSize,
+            m_gridSize)));
   }
 }
 
-void State::drawWalls(::sf::RenderWindow& window) 
+void State::drawWalls(::sf::RenderWindow& window)
 {
   for (auto& element : m_elements)
     element->draw(window);
 }
 
+void State::computeLevelBoundingBox()
+{
+  unsigned int maxXbox = (m_screen.width() - 2 * m_screen.minLeftBorder()) / m_width;
+  unsigned int maxYbox = (m_screen.height() - 2 * m_screen.minTopBorder()) / m_height;
+  m_gridSize = std::min(maxXbox, maxYbox);
+  unsigned int width = m_gridSize * m_width;
+  unsigned int height = m_gridSize * m_height;
+  unsigned int left = m_screen.width() / 2 - width / 2;
+  unsigned int right = m_screen.height() / 2 - height / 2;
+  m_drawingArea = ::sf::IntRect(left, right, width, height);
+} 
 
 } // namespace bigmama 

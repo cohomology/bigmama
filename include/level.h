@@ -141,7 +141,6 @@ public:
 
   unsigned int width() const;
   unsigned int height() const;
-  unsigned int grid_size() const;
 
 private:
   const AssetLibrary& m_library;
