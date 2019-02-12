@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
     bigmama::Screen screen;
     bigmama::AssetLibrary assets(argv[0]);
     bigmama::State state(assets, screen);
-    bigmama::Game game(assets, screen, state);
+    bigmama::Game game(screen, state);
     game.run();
   }
   catch(const std::exception& exc)

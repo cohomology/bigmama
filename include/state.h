@@ -36,10 +36,6 @@ public:
         unsigned int level = 1);
   void reload(unsigned int level);
   void drawWalls(::sf::RenderWindow& window);
-  unsigned int width() const
-  { return m_width; }
-  unsigned int height() const
-  { return m_height; }
 private:
   void computeLevelBoundingBox(); 
 
@@ -48,8 +44,8 @@ private:
   std::vector<TexturePtr> m_textures;
   std::vector<ElementPtr> m_elements;
   unsigned int            m_level;
-  unsigned int            m_width;
-  unsigned int            m_height;
+  unsigned int            m_xBoxCnt;
+  unsigned int            m_yBoxCnt;
   ::sf::IntRect           m_drawingArea;
   unsigned int            m_gridSize; 
 };

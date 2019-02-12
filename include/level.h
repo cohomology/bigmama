@@ -139,8 +139,8 @@ public:
   WallView walls() const
   { return WallView(m_library, m_root); } 
 
-  unsigned int width() const;
-  unsigned int height() const;
+  unsigned int xBoxCnt() const;
+  unsigned int yBoxCnt() const;
 
 private:
   const AssetLibrary& m_library;

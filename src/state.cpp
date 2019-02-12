@@ -31,7 +31,7 @@ State::State(const AssetLibrary& library,
              const Screen& screen, 
              unsigned int level) 
   : m_library{library}, m_screen{screen}, m_textures{},
-  m_elements{}, m_level{level}, m_width{0}, m_height{0}, 
+  m_elements{}, m_level{level}, m_xBoxCnt{0}, m_yBoxCnt{0}, 
   m_drawingArea{}, m_gridSize{0}
 {
   reload(level);
@@ -40,8 +40,8 @@ State::State(const AssetLibrary& library,
 void State::reload(unsigned int levelNr)
 {
   Level level(m_library, levelNr);
-  m_width = level.width();
-  m_height = level.height();
+  m_xBoxCnt = level.xBoxCnt();
+  m_yBoxCnt = level.yBoxCnt();
   computeLevelBoundingBox();  
   std::copy(level.textures().begin(), level.textures().end(),
       std::back_inserter(m_textures));
@@ -66,11 +66,11 @@ void State::drawWalls(::sf::RenderWindow& window)
 
 void State::computeLevelBoundingBox()
 {
-  unsigned int maxXbox = (m_screen.width() - 2 * m_screen.minLeftBorder()) / m_width;
-  unsigned int maxYbox = (m_screen.height() - 2 * m_screen.minTopBorder()) / m_height;
+  unsigned int maxXbox = (m_screen.width() - 2 * m_screen.minLeftBorder()) / m_xBoxCnt;
+  unsigned int maxYbox = (m_screen.height() - 2 * m_screen.minTopBorder()) / m_yBoxCnt;
   m_gridSize = std::min(maxXbox, maxYbox);
-  unsigned int width = m_gridSize * m_width;
-  unsigned int height = m_gridSize * m_height;
+  unsigned int width = m_gridSize * m_xBoxCnt;
+  unsigned int height = m_gridSize * m_yBoxCnt;
   unsigned int left = m_screen.width() / 2 - width / 2;
   unsigned int right = m_screen.height() / 2 - height / 2;
   m_drawingArea = ::sf::IntRect(left, right, width, height);

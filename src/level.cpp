@@ -77,14 +77,14 @@ Level::Level(const AssetLibrary& library,
   m_reader.parse(data, data + asset->size(), m_root);
 }
 
-unsigned int Level::width() const
+unsigned int Level::xBoxCnt() const
 { 
-  return m_root["width"].asUInt(); 
+  return m_root["xBoxCnt"].asUInt(); 
 }
 
-unsigned int Level::height() const
+unsigned int Level::yBoxCnt() const
 { 
-  return m_root["height"].asUInt(); 
+  return m_root["yBoxCnt"].asUInt(); 
 } 
 
 }
