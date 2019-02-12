@@ -1,7 +1,7 @@
 #ifndef BIGMAMALEVEL_H
 #define BIGMAMALEVEL_H
 
-#include "types.h"
+#include "texture.h"
 
 #include <jsoncpp/json/json.h>
 #include <boost/iterator/iterator_facade.hpp>

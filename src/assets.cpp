@@ -21,14 +21,14 @@ AssetLibrary::~AssetLibrary()
   PHYSFS_deinit(); 
 }
 
-Asset AssetLibrary::get(const char * asset) const
+std::unique_ptr<Asset> AssetLibrary::get(const char * asset) const
 {
   if (!PHYSFS_exists(asset))
     throw AssetNotFound(asset);
   PHYSFS_file* assetFile = PHYSFS_openRead(asset);
   std::vector<char> data(PHYSFS_fileLength(assetFile));
   PHYSFS_readBytes (assetFile, &data[0], PHYSFS_fileLength(assetFile));
-  return Asset(std::move(data));
+  return std::make_unique<Asset>(std::move(data));
 }
 
 };

@@ -30,10 +30,9 @@ TexturePtr TextureIterator::dereference() const
 {
   assert(m_value != nullptr);
   assert(m_library != nullptr);
-  Asset asset = 
+  auto asset = 
     m_library->get((*m_value)[m_counter].asString());
-  auto texture = std::make_shared<::sf::Texture>();
-  texture->loadFromMemory(asset.data(), asset.size());
+  auto texture = std::make_shared<Texture>(std::move(asset));
   return texture;
 } 
 
@@ -72,9 +71,9 @@ Level::Level(const AssetLibrary& library,
   std::string levelFile("level");
   levelFile.append(boost::lexical_cast<std::string>(levelNr));
   levelFile.append(".json");
-  Asset asset = library.get(levelFile);
-  const char * data = reinterpret_cast<const char*>(asset.data());
-  m_reader.parse(data, data + asset.size(), m_root);
+  auto asset = library.get(levelFile);
+  const char * data = reinterpret_cast<const char*>(asset->data());
+  m_reader.parse(data, data + asset->size(), m_root);
 }
 
 unsigned int Level::width() const
