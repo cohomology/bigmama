@@ -32,7 +32,8 @@ TexturePtr TextureIterator::dereference() const
   assert(m_library != nullptr);
   auto asset = 
     m_library->get((*m_value)[m_counter].asString());
-  auto texture = std::make_shared<Texture>(std::move(asset));
+  auto texture = std::make_shared<::sf::Texture>();
+  texture->loadFromMemory(asset->data(), asset->size());
   return texture;
 } 
 

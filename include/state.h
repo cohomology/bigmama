@@ -1,10 +1,9 @@
 #ifndef BIGMAMASTATE_H
 #define BIGMAMASTATE_H
 
-#include "texture.h"
+#include "types.h"
 
 #include <vector>
-
 #include <SFML/Graphics.hpp>
 
 namespace bigmama
@@ -22,6 +21,7 @@ public:
 
 private:
   const TexturePtr m_texture;
+  ::sf::Sprite m_sprite;
   ::sf::IntRect m_rectangle;
 };
 

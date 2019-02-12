@@ -11,17 +11,19 @@ namespace bigmama
 
 Element::Element(const TexturePtr texture,
                  const sf::IntRect& rectangle)
-  : m_texture{texture}, m_rectangle{rectangle}
-{ }
+  : m_texture{texture}, 
+  m_sprite{*m_texture},
+  m_rectangle{rectangle}
+{ 
+  sf::Vector2u size = texture->getSize(); 
+  m_sprite.setPosition(m_rectangle.left, m_rectangle.top); 
+  m_sprite.setScale(static_cast<float>(m_rectangle.width) / size.x, 
+                  static_cast<float>(m_rectangle.height) / size.y);  
+}
 
 void Element::draw(::sf::RenderWindow& window) 
 {
-  sf::Vector2u size = m_texture->texture().getSize(); 
-  ::sf::Sprite sprite(m_texture->texture());
-  sprite.setPosition(m_rectangle.left, m_rectangle.top); 
-  sprite.setScale(static_cast<float>(m_rectangle.width) / size.x, 
-                  static_cast<float>(m_rectangle.height) / size.y); 
-  window.draw(sprite);
+  window.draw(m_sprite);
 }
 
 State::State(const AssetLibrary& library,
