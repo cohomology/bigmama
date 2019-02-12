@@ -24,6 +24,7 @@ private:
   ::sf::VideoMode       m_mode;
   ::sf::RenderWindow    m_window;
   const AssetLibrary&   m_assets;
+  // const State&          m_state; 
 }; 
 
 }

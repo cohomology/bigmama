@@ -27,6 +27,10 @@ class Asset
 {
   friend class AssetLibrary;
 public:
+  Asset(Asset&&) = default;
+  Asset(const Asset&) = default;
+  // bool operator==(const Asset&) = default;
+
   const void * data() const
   { return &m_data[0]; }
 

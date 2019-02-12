@@ -1,5 +1,6 @@
 #include "level.h"
 #include "assets.h"
+#include "state.h"
 
 #include <boost/lexical_cast.hpp>
 
