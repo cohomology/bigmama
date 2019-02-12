@@ -1,7 +1,10 @@
 {
-  "wall_types" = ["stone_grey.png"],
-  "walls" = [ 
-    { "wall_type" : 0,
+  "textures" : ["stone_grey.png"],
+  "width" : 50,
+  "height" : 30,
+  "grid_size" : 32,
+  "walls" : [ 
+    { "texture"   : 0,
       "x"         : 0,
       "y"         : 0 }]
 }
