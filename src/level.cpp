@@ -66,11 +66,11 @@ WallIterator WallView::begin()
 } 
 
 Level::Level(const AssetLibrary& library,
-             unsigned int level)
+             unsigned int levelNr)
   : m_library(library), m_reader(), m_root()
 {
   std::string levelFile("level");
-  levelFile.append(boost::lexical_cast<std::string>(level));
+  levelFile.append(boost::lexical_cast<std::string>(levelNr));
   levelFile.append(".json");
   Asset asset = library.get(levelFile);
   const char * data = reinterpret_cast<const char*>(asset.data());

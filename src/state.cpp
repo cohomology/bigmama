@@ -1,6 +1,9 @@
 #include "state.h"
 #include "level.h"
 
+#include <SFML/Graphics/Rect.hpp>
+#include <cassert>
+
 namespace bigmama
 {
 
@@ -28,9 +31,22 @@ State::State(const AssetLibrary& library,
   reload(level);
 }
 
-void State::reload(unsigned int level)
+void State::reload(unsigned int levelNr)
 {
-//  Level level(m_library, level);
+  Level level(m_library, levelNr);
+  for (auto texture : level.textures())
+    m_textures.push_back(texture);
+  for (auto wall : level.walls())
+  {
+    assert(wall.texture < m_textures.size());
+    m_elements.push_back(std::make_unique<Element>(
+          m_textures[wall.texture], 
+          typename ::sf::IntRect(
+            level.grid_size()*wall.x,
+            level.grid_size()*wall.y,
+            level.grid_size(),
+            level.grid_size())));
+  }
 }
 
 } // namespace bigmama 

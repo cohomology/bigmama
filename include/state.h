@@ -26,6 +26,8 @@ private:
   ::sf::IntRect m_rectangle;
 };
 
+typedef std::unique_ptr<Element> ElementPtr;
+
 class State
 {
 public:
@@ -36,7 +38,7 @@ public:
 private:
   const AssetLibrary&     m_library;
   std::vector<TexturePtr> m_textures;
-  std::vector<Element>    m_elements;
+  std::vector<ElementPtr> m_elements;
   unsigned int            m_level;
 };
 

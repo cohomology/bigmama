@@ -131,7 +131,7 @@ class Level
 {
 public:
   Level(const AssetLibrary& library,
-        unsigned int level);
+        unsigned int levelNr);
 
   TextureView textures() const
   { return TextureView(m_library, m_root); }
