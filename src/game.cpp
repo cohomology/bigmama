@@ -51,6 +51,7 @@ void Game::display()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   m_window.clear(sf::Color::White);
+  m_state.drawBoundingBox(m_window);
   m_state.drawWalls(m_window);
   m_window.display(); 
 }

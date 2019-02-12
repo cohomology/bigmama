@@ -58,6 +58,16 @@ void State::reload(unsigned int levelNr)
   }
 }
 
+void State::drawBoundingBox(::sf::RenderWindow& window) 
+{
+  ::sf::RectangleShape rectangle(
+      ::sf::Vector2f(m_drawingArea.width, m_drawingArea.height));
+  rectangle.setOutlineColor(sf::Color::Black);
+  rectangle.setOutlineThickness(1);
+  rectangle.setPosition(m_drawingArea.left, m_drawingArea.top);
+  window.draw(rectangle);
+}
+
 void State::drawWalls(::sf::RenderWindow& window)
 {
   for (auto& element : m_elements)

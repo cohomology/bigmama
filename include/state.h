@@ -36,6 +36,7 @@ public:
         unsigned int level = 1);
   void reload(unsigned int level);
   void drawWalls(::sf::RenderWindow& window);
+  void drawBoundingBox(::sf::RenderWindow& window);
 private:
   void computeLevelBoundingBox(); 
 
