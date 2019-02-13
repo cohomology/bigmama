@@ -8,22 +8,18 @@ class Screen
 {
 public:
   unsigned int width() const
-  { return screenWidth; }
+  { return m_width; }
 
   unsigned int height() const
-  { return screenHeight; }
+  { return m_height; }
 
-  unsigned int minLeftBorder() const
-  { return leftBorder; }
-
-  unsigned int minTopBorder() const
-  { return topBorder; }
+  unsigned int statusAreaHeight() const
+  { return m_statusAreaHeight; }
 
 private:
-  static const int screenWidth = 1920;
-  static const int screenHeight = 1080;
-  static const int leftBorder = 50;
-  static const int topBorder = 50;   
+  static const int m_width = 1920;
+  static const int m_height = 1080;
+  static const int m_statusAreaHeight = 120;
 };
 
 }

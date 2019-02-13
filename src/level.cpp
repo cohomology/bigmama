@@ -1,6 +1,5 @@
 #include "level.h"
 #include "assets.h"
-#include "state.h"
 
 #include <boost/lexical_cast.hpp>
 #include <cassert>
@@ -45,7 +44,9 @@ Wall WallIterator::dereference() const
   return Wall {
     wall["texture"].asUInt(),
     wall["x"].asUInt(),
-    wall["y"].asUInt()
+    wall["y"].asUInt(),
+    wall["width"].asUInt(),
+    wall["height"].asUInt()
   };
 } 
 
@@ -76,15 +77,5 @@ Level::Level(const AssetLibrary& library,
   const char * data = reinterpret_cast<const char*>(asset->data());
   m_reader.parse(data, data + asset->size(), m_root);
 }
-
-unsigned int Level::xBoxCnt() const
-{ 
-  return m_root["xBoxCnt"].asUInt(); 
-}
-
-unsigned int Level::yBoxCnt() const
-{ 
-  return m_root["yBoxCnt"].asUInt(); 
-} 
 
 }

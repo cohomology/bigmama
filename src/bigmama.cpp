@@ -1,7 +1,6 @@
 #include "game.h"
 #include "assets.h"
 #include "level.h"
-#include "state.h"
 #include "screen.h"
 
 #include <iostream>
@@ -12,8 +11,7 @@ int main(int argc, char *argv[])
   {
     bigmama::Screen screen;
     bigmama::AssetLibrary assets(argv[0]);
-    bigmama::State state(assets, screen);
-    bigmama::Game game(screen, state);
+    bigmama::Game game(assets, screen);
     game.run();
   }
   catch(const std::exception& exc)

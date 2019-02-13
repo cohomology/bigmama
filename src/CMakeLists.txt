@@ -2,7 +2,7 @@ list(APPEND BIGMAMA_LIBRARY_SOURCE
   ${CMAKE_SOURCE_DIR}/src/assets.cpp 
   ${CMAKE_SOURCE_DIR}/src/game.cpp 
   ${CMAKE_SOURCE_DIR}/src/level.cpp 
-  ${CMAKE_SOURCE_DIR}/src/state.cpp  
+  ${CMAKE_SOURCE_DIR}/src/element.cpp  
 )
 
 find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED) 

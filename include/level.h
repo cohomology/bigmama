@@ -84,6 +84,8 @@ struct Wall
   unsigned int texture;
   unsigned int x;
   unsigned int y;
+  unsigned int width;
+  unsigned int height;
 };
 
 class WallIterator
@@ -138,9 +140,6 @@ public:
 
   WallView walls() const
   { return WallView(m_library, m_root); } 
-
-  unsigned int xBoxCnt() const;
-  unsigned int yBoxCnt() const;
 
 private:
   const AssetLibrary& m_library;
