@@ -16,7 +16,8 @@ Game::Game(const AssetLibrary& assets,
     m_window{m_mode, "bigmama", sf::Style::Fullscreen, m_settings},
      m_assets{assets}, m_screen{screen}, m_textures{},
   m_elements{}, m_levelNr{levelNr}, m_levelEditMode{false}, 
-  m_fontAsset{m_assets.get("FreeMono.ttf")}, m_font{}
+  m_fontAsset{m_assets.get("FreeMono.ttf")}, m_font{},
+  m_editor{nullptr}
 {
   m_window.setVerticalSyncEnabled(true);
   m_window.setActive(true); 
@@ -110,18 +111,10 @@ void Game::drawStatusArea()
   m_window.draw(rectangle);
 
   if (m_levelEditMode)
-    printLevelEditModeIndicator();
-}
-
-void Game::printLevelEditModeIndicator()
-{
-  ::sf::Text levelEditMode;
-  levelEditMode.setString("Level edit mode");
-  levelEditMode.setFont(m_font);
-  levelEditMode.setFillColor(::sf::Color::Red);
-  levelEditMode.setCharacterSize(20);
-  levelEditMode.move(5, m_screen.height() - 25);
-  m_window.draw(levelEditMode);
+  {
+    assert(m_editor != nullptr);
+    m_editor->draw(m_window);
+  }  
 }
 
 void Game::reload(unsigned int levelNr)
@@ -143,6 +136,7 @@ void Game::reload(unsigned int levelNr)
             wall.width,
             wall.height)));
   }
+  m_window.setMouseCursorVisible(m_levelEditMode);
 } 
 
 void Game::drawGame()
@@ -155,6 +149,9 @@ void Game::toggleLevelEditMode()
 {
   m_levelEditMode = !m_levelEditMode;
   reload(m_levelEditMode ? 0 : 1);
+  if (m_editor == nullptr)
+    m_editor = std::make_unique<LevelEditor>(m_assets,
+        m_screen);
 }
 
 } // namespace bigmama

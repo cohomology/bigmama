@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "element.h"
+#include "level_editor.h"
 
 #include <SFML/Graphics.hpp>
 
@@ -12,6 +13,7 @@ namespace bigmama
 class AssetLibrary;
 class Screen;
 class Asset;
+class LevelEditor;
 
 class Game
 {
@@ -28,7 +30,6 @@ private:
   void mousePress(const ::sf::Event& event);
   void drawStatusArea();
   void drawStatusAreaBorder(); 
-  void printLevelEditModeIndicator();
   void drawGame();
   void reload(unsigned int levelNr);
   void toggleLevelEditMode(); 
@@ -47,6 +48,8 @@ private:
  
   std::unique_ptr<Asset>  m_fontAsset;
   ::sf::Font              m_font; 
+
+  std::unique_ptr<LevelEditor> m_editor;
 }; 
 
 }
