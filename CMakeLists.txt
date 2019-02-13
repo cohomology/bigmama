@@ -8,3 +8,4 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_subdirectory(assets)
 add_subdirectory(src)
+add_subdirectory(tools)
