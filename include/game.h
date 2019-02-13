@@ -11,6 +11,7 @@ namespace bigmama
 
 class AssetLibrary;
 class Screen;
+class Asset;
 
 class Game
 {
@@ -26,8 +27,11 @@ private:
   void keyPress(const ::sf::Event& event);
   void mousePress(const ::sf::Event& event);
   void drawStatusArea();
+  void drawStatusAreaBorder(); 
+  void printLevelEditModeIndicator();
   void drawGame();
   void reload(unsigned int levelNr);
+  void toggleLevelEditMode(); 
 
 private:
   ::sf::ContextSettings   m_settings;
@@ -39,6 +43,10 @@ private:
   std::vector<TexturePtr> m_textures;
   std::vector<ElementPtr> m_elements;
   unsigned int            m_levelNr; 
+  bool                    m_levelEditMode;
+ 
+  std::unique_ptr<Asset>  m_fontAsset;
+  ::sf::Font              m_font; 
 }; 
 
 }

@@ -3,6 +3,8 @@
 
 #include <boost/lexical_cast.hpp>
 #include <cassert>
+#include <fstream>
+#include <streambuf>
 
 namespace bigmama
 {
@@ -66,16 +68,54 @@ WallIterator WallView::begin()
     WallIterator(m_library, walls);
 } 
 
+std::string Level::generateLevelFileName(unsigned int levelNr)
+{
+  std::string levelFile("level");
+  if (levelNr != 0)
+    levelFile.append(boost::lexical_cast<std::string>(levelNr));
+  levelFile.append(".json"); 
+  return levelFile;
+}
+
+void Level::loadLevelEditTemplate()
+{
+  std::ifstream stream("level.json");
+  if (stream.good())
+    loadFromFile(stream);
+  else
+    loadLevelFromAssets("template.json");
+}
+
+void Level::loadFromFile(std::ifstream& stream)
+{
+  std::string str((std::istreambuf_iterator<char>(stream)),
+                   std::istreambuf_iterator<char>());
+  m_reader.parse(str.c_str(), str.c_str() + str.size(), m_root);   
+}
+
+void Level::loadLevel(unsigned int levelNr)
+{
+  std::string levelFile("level");
+  levelFile.append(boost::lexical_cast<std::string>(levelNr));
+  levelFile.append(".json"); 
+  loadLevelFromAssets(levelFile);
+}
+
+void Level::loadLevelFromAssets(const std::string& levelFile)
+{
+  auto asset = m_library.get(levelFile);
+  const char * data = reinterpret_cast<const char*>(asset->data());
+  m_reader.parse(data, data + asset->size(), m_root);  
+}
+
 Level::Level(const AssetLibrary& library,
              unsigned int levelNr)
   : m_library(library), m_reader(), m_root()
 {
-  std::string levelFile("level");
-  levelFile.append(boost::lexical_cast<std::string>(levelNr));
-  levelFile.append(".json");
-  auto asset = library.get(levelFile);
-  const char * data = reinterpret_cast<const char*>(asset->data());
-  m_reader.parse(data, data + asset->size(), m_root);
+  if (levelNr == 0)
+    loadLevelEditTemplate();
+  else 
+    loadLevel(levelNr);
 }
 
 }

@@ -14,11 +14,13 @@ Game::Game(const AssetLibrary& assets,
            unsigned int levelNr)
   : m_settings{16, 8, 8, 3, 0}, m_mode{screen.width(), screen.height()}, 
     m_window{m_mode, "bigmama", sf::Style::Fullscreen, m_settings},
-    m_assets{assets}, m_screen{screen}, m_textures{},
-  m_elements{}, m_levelNr{levelNr}             
+     m_assets{assets}, m_screen{screen}, m_textures{},
+  m_elements{}, m_levelNr{levelNr}, m_levelEditMode{false}, 
+  m_fontAsset{m_assets.get("FreeMono.ttf")}, m_font{}
 {
   m_window.setVerticalSyncEnabled(true);
   m_window.setActive(true); 
+  m_font.loadFromMemory(m_fontAsset->data(), m_fontAsset->size());
   reload(levelNr);
 }
 
@@ -72,6 +74,9 @@ void Game::keyPress(const sf::Event& event)
 {
   switch(event.key.code)
   {
+    case sf::Keyboard::L:
+      toggleLevelEditMode(); 
+      break;
     case sf::Keyboard::Left:
     case sf::Keyboard::Right:
     case sf::Keyboard::Up:
@@ -103,10 +108,27 @@ void Game::drawStatusArea()
   rectangle.setOutlineThickness(1);
   rectangle.setPosition(0, 0);
   m_window.draw(rectangle);
+
+  if (m_levelEditMode)
+    printLevelEditModeIndicator();
+}
+
+void Game::printLevelEditModeIndicator()
+{
+  ::sf::Text levelEditMode;
+  levelEditMode.setString("Level edit mode");
+  levelEditMode.setFont(m_font);
+  levelEditMode.setFillColor(::sf::Color::Red);
+  levelEditMode.setCharacterSize(20);
+  levelEditMode.move(5, m_screen.height() - 25);
+  m_window.draw(levelEditMode);
 }
 
 void Game::reload(unsigned int levelNr)
 {
+  m_levelNr = levelNr; 
+  m_textures.clear();
+  m_elements.clear();
   Level level(m_assets, levelNr);
   std::copy(level.textures().begin(), level.textures().end(),
       std::back_inserter(m_textures));
@@ -127,6 +149,12 @@ void Game::drawGame()
 {
   for(auto& element : m_elements)
     element->draw(m_window);
+}
+
+void Game::toggleLevelEditMode()
+{
+  m_levelEditMode = !m_levelEditMode;
+  reload(m_levelEditMode ? 0 : 1);
 }
 
 } // namespace bigmama

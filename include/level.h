@@ -142,6 +142,12 @@ public:
   { return WallView(m_library, m_root); } 
 
 private:
+  std::string generateLevelFileName(unsigned int levelNr);
+  void loadLevelEditTemplate();
+  void loadFromFile(std::ifstream& stream); 
+  void loadLevel(unsigned int levelNr); 
+  void loadLevelFromAssets(const std::string& levelFile); 
+
   const AssetLibrary& m_library;
   ::Json::Reader m_reader;
   ::Json::Value  m_root;
