@@ -20,11 +20,15 @@ Game::Game(const AssetLibrary& assets,
      m_assets{assets}, m_screen{screen}, m_textures{},
   m_elements{}, m_levelNr{levelNr}, m_levelEditMode{false}, 
   m_fontAsset{m_assets.get("FreeMono.ttf")}, m_font{},
-  m_editor{nullptr}
+  m_editor{nullptr}, m_boundingRectangle{
+      ::sf::Vector2f(m_screen.width(), m_screen.height() - m_screen.statusAreaHeight())} 
 {
   m_window.setVerticalSyncEnabled(true);
   m_window.setActive(true); 
   m_font.loadFromMemory(m_fontAsset->data(), m_fontAsset->size());
+  m_boundingRectangle.setOutlineColor(sf::Color::Black);
+  m_boundingRectangle.setOutlineThickness(1);
+  m_boundingRectangle.setPosition(0, 0); 
   reload(levelNr);
 }
 
@@ -64,6 +68,7 @@ void Game::display()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   m_window.clear(sf::Color::White);
+  m_window.draw(m_boundingRectangle);
   drawStatusArea();
   drawGame();
   m_window.display(); 
@@ -106,13 +111,6 @@ void Game::mousePress(const sf::Event& event)
 
 void Game::drawStatusArea()
 {
-  ::sf::RectangleShape rectangle(
-      ::sf::Vector2f(m_screen.width(), m_screen.height() - m_screen.statusAreaHeight()));
-  rectangle.setOutlineColor(sf::Color::Black);
-  rectangle.setOutlineThickness(1);
-  rectangle.setPosition(0, 0);
-  m_window.draw(rectangle);
-
   if (m_levelEditMode)
   {
     assert(m_editor != nullptr);

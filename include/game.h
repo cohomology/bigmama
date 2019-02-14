@@ -39,21 +39,22 @@ private:
       const ::sf::IntRect& rectangle); 
 
 private:
-  ::sf::ContextSettings   m_settings;
-  ::sf::VideoMode         m_mode;
-  ::sf::RenderWindow      m_window;
+  ::sf::ContextSettings        m_settings;
+  ::sf::VideoMode              m_mode;
+  ::sf::RenderWindow           m_window;
 
-  const AssetLibrary&     m_assets;
-  const Screen&           m_screen; 
-  std::vector<TexturePtr> m_textures;
-  std::vector<ElementPtr> m_elements;
-  unsigned int            m_levelNr; 
-  bool                    m_levelEditMode;
+  const AssetLibrary&          m_assets;
+  const Screen&                m_screen; 
+  std::vector<TexturePtr>      m_textures;
+  std::vector<ElementPtr>      m_elements;
+  unsigned int                 m_levelNr; 
+  bool                         m_levelEditMode;
  
-  std::unique_ptr<Asset>  m_fontAsset;
-  ::sf::Font              m_font; 
+  std::unique_ptr<Asset>       m_fontAsset;
+  ::sf::Font                   m_font; 
 
   std::unique_ptr<LevelEditor> m_editor;
+  ::sf::RectangleShape         m_boundingRectangle;
 }; 
 
 }

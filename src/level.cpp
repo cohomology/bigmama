@@ -31,13 +31,13 @@ ElementDescriptor ElementIterator::dereference() const
 {
   assert(m_value != nullptr);
   assert(m_library != nullptr);
-  const ::Json::Value& wall = (*m_value)[m_counter];
+  const ::Json::Value& element = (*m_value)[m_counter];
   return ElementDescriptor {
-    wall["resource"].asUInt(),
-    wall["x"].asUInt(),
-    wall["y"].asUInt(),
-    wall["width"].asUInt(),
-    wall["height"].asUInt()
+    element["resource"].asUInt(),
+    element["x"].asUInt(),
+    element["y"].asUInt(),
+    element["width"].asUInt(),
+    element["height"].asUInt()
   };
 } 
 
