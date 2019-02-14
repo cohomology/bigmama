@@ -33,6 +33,10 @@ private:
   void drawGame();
   void reload(unsigned int levelNr);
   void toggleLevelEditMode(); 
+  std::unique_ptr<Element> createGameElement(
+      const Resource& resource,
+      std::vector<TexturePtr>&& textures,
+      const ::sf::IntRect& rectangle); 
 
 private:
   ::sf::ContextSettings   m_settings;

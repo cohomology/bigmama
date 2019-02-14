@@ -2,9 +2,12 @@
 #include "assets.h"
 #include "screen.h"
 #include "level.h"
+#include "resources.h"
 
 #include <SFML/OpenGL.hpp>
+
 #include <cassert>
+#include <cstring>
 
 namespace bigmama
 {
@@ -117,24 +120,65 @@ void Game::drawStatusArea()
   }  
 }
 
+struct CompareString
+{
+  bool operator()(const char * first, const char * second) const
+  { return std::strcmp(first, second) < 0; }
+};
+
+std::unique_ptr<Element> Game::createGameElement(
+  const Resource& resource,
+  std::vector<TexturePtr>&& textures,
+  const ::sf::IntRect& rectangle)
+{
+  std::unique_ptr<Element> element;
+  switch(resource.elementClassKind())
+  {
+    case ElementClassKind::SimpleElement:
+    {
+      assert(textures.size() == 1);
+      element = std::make_unique<SimpleElement>(
+          resource, std::move(textures[0]), rectangle);
+      break;
+    }
+    default:
+    {
+      assert(1 == 0);
+      break;
+    }
+  }
+  return element;
+}
+
 void Game::reload(unsigned int levelNr)
 {
   m_levelNr = levelNr; 
   m_textures.clear();
   m_elements.clear();
   Level level(m_assets, levelNr);
-  std::copy(level.textures().begin(), level.textures().end(),
-      std::back_inserter(m_textures));
-  for (auto wall : level.walls())
+  std::map<const char *, TexturePtr, CompareString> textureMap;
+  for (auto element : level.elements())
   {
-    assert(wall.texture < m_textures.size());
-    m_elements.push_back(std::make_unique<Element>(
-          m_textures[wall.texture], 
-          typename ::sf::IntRect(
-            wall.x,
-            wall.y,
-            wall.width,
-            wall.height)));
+    assert(element.resource < resources.size());
+    const Resource& resource = resources[element.resource];
+    std::vector<TexturePtr> textures;
+    textures.reserve(resource.textures().size()); 
+    for (auto& texture : resource.textures())
+    {
+      auto it = textureMap.find(texture);
+      if (it != textureMap.end())
+        textures.push_back(it->second);
+      else
+      {
+        auto newTexture = std::make_shared<::sf::Texture>(); 
+        auto asset = m_assets.get(texture);
+        newTexture->loadFromMemory(asset->data(), asset->size());
+        textureMap.insert(std::make_pair(texture, newTexture));
+        textures.push_back(newTexture);
+      }
+    }
+    m_elements.push_back(createGameElement(resource, std::move(textures),
+          ::sf::IntRect(element.x, element.y, element.width, element.height)));
   }
   m_window.setMouseCursorVisible(m_levelEditMode);
 } 

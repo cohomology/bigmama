@@ -27,24 +27,13 @@ bool JsonIterator::equal(const JsonIterator & other) const
      m_counter == other.m_counter);
 } 
 
-TexturePtr TextureIterator::dereference() const
-{
-  assert(m_value != nullptr);
-  assert(m_library != nullptr);
-  auto asset = 
-    m_library->get((*m_value)[m_counter].asString());
-  auto texture = std::make_shared<::sf::Texture>();
-  texture->loadFromMemory(asset->data(), asset->size());
-  return texture;
-} 
-
-Wall WallIterator::dereference() const
+ElementDescriptor ElementIterator::dereference() const
 {
   assert(m_value != nullptr);
   assert(m_library != nullptr);
   const ::Json::Value& wall = (*m_value)[m_counter];
-  return Wall {
-    wall["texture"].asUInt(),
+  return ElementDescriptor {
+    wall["resource"].asUInt(),
     wall["x"].asUInt(),
     wall["y"].asUInt(),
     wall["width"].asUInt(),
@@ -52,20 +41,12 @@ Wall WallIterator::dereference() const
   };
 } 
 
-TextureIterator TextureView::begin() 
+ElementIterator ElementView::begin() 
 {
-  const ::Json::Value& textures = m_root["textures"];
-  return textures.size() == 0 ?
-    TextureIterator() : 
-    TextureIterator(m_library, textures);
-} 
-
-WallIterator WallView::begin() 
-{
-  const ::Json::Value& walls = m_root["walls"];
-  return walls.size() == 0 ?
-    WallIterator() : 
-    WallIterator(m_library, walls);
+  const ::Json::Value& elements = m_root["elements"];
+  return elements.size() == 0 ?
+    ElementIterator() : 
+    ElementIterator(m_library, elements);
 } 
 
 std::string Level::generateLevelFileName(unsigned int levelNr)

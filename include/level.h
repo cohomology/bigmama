@@ -38,70 +38,29 @@ protected:
   unsigned int m_counter;
 }; 
 
-class TextureIterator
-  : public boost::iterator_facade<
-        TextureIterator
-      , TexturePtr
-      , boost::forward_traversal_tag
-      , TexturePtr
-    >, public JsonIterator
+struct ElementDescriptor
 {
-public:
-  TextureIterator()
-    : JsonIterator()
-  { }
-
-  TextureIterator(
-    const AssetLibrary&   library, 
-    const ::Json::Value&  value) 
-    : JsonIterator(library, value)
-  { }
-
-private:
-  friend class boost::iterator_core_access;
-  TexturePtr dereference() const;
-};  
-
-class TextureView
-{
-  friend class Level;
-public:
-  TextureIterator begin();
-  TextureIterator end()
-  { return TextureIterator(); } 
-private:
-  TextureView(const AssetLibrary& library, 
-              ::Json::Value       root)            
-    : m_library(library), m_root(root)
-  { }
-
-  const AssetLibrary& m_library; 
-  ::Json::Value  m_root; 
-};
-
-struct Wall
-{
-  unsigned int texture;
+  unsigned int resource;
   unsigned int x;
   unsigned int y;
   unsigned int width;
   unsigned int height;
 };
 
-class WallIterator
+class ElementIterator
   : public boost::iterator_facade<
-        WallIterator
-      , Wall
+        ElementIterator
+      , ElementDescriptor
       , boost::forward_traversal_tag
-      , Wall
+      , ElementDescriptor
     >, public JsonIterator
 {
 public:
-  WallIterator()
+  ElementIterator()
     : JsonIterator()
   { }
 
-  WallIterator(
+  ElementIterator(
     const AssetLibrary&   library, 
     const ::Json::Value&  value) 
     : JsonIterator(library, value)
@@ -109,18 +68,18 @@ public:
 
 private:
   friend class boost::iterator_core_access;
-  Wall dereference() const;
+  ElementDescriptor dereference() const;
 };  
 
-class WallView
+class ElementView
 {
   friend class Level;
 public:
-  WallIterator begin();
-  WallIterator end()
-  { return WallIterator(); } 
+  ElementIterator begin();
+  ElementIterator end()
+  { return ElementIterator(); } 
 private:
-  WallView(const AssetLibrary& library, 
+  ElementView(const AssetLibrary& library, 
            ::Json::Value       root)            
     : m_library(library), m_root(root)
   { }
@@ -135,11 +94,8 @@ public:
   Level(const AssetLibrary& library,
         unsigned int levelNr);
 
-  TextureView textures() const
-  { return TextureView(m_library, m_root); }
-
-  WallView walls() const
-  { return WallView(m_library, m_root); } 
+  ElementView elements() const
+  { return ElementView(m_library, m_root); } 
 
 private:
   std::string generateLevelFileName(unsigned int levelNr);
