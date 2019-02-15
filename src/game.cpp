@@ -101,11 +101,28 @@ void Game::keyPress(const sf::Event& event)
 
 void Game::mousePress(const sf::Event& event)
 {
+  ::sf::Vector2i intPosition = sf::Mouse::getPosition(m_window);
+  ::sf::Vector2f position = ::sf::Vector2f(intPosition.x, intPosition.y);
   switch(event.mouseButton.button)
   {
     case ::sf::Mouse::Left:
-    case ::sf::Mouse::Right:
+    {
+      if (m_levelEditMode && isInsideStatusArea(position))
+      {
+        assert(m_editor != nullptr);
+        m_editor->mousePressLeft(position);
+      }
       break;
+    }
+    case ::sf::Mouse::Right:
+    {
+      if (m_levelEditMode && isInsideStatusArea(position))
+      {
+        assert(m_editor != nullptr);
+        m_editor->mousePressRight(position);
+      }
+      break;
+    }
   }
 }
 

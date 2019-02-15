@@ -9,7 +9,12 @@ const std::vector<Resource> resources = {
         ResourceKind::Wall, 
         { "stone_grey.png" },
         "Grey stone",
-        ElementClassKind::SimpleElement)
+        ElementClassKind::SimpleElement),
+    Resource(
+        ResourceKind::Wall, 
+        { "stone_red.png" },
+        "Red stone",
+        ElementClassKind::SimpleElement) 
   }
 };
 

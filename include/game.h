@@ -4,6 +4,7 @@
 #include "types.h"
 #include "element.h"
 #include "level_editor.h"
+#include "screen.h"
 
 #include <SFML/Graphics.hpp>
 
@@ -37,6 +38,8 @@ private:
       const Resource& resource,
       std::vector<TexturePtr>&& textures,
       const ::sf::IntRect& rectangle); 
+  bool isInsideStatusArea(const ::sf::Vector2f& position)
+  { return position.y >= m_screen.height() - m_screen.statusAreaHeight(); }
 
 private:
   ::sf::ContextSettings        m_settings;

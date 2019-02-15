@@ -45,4 +45,5 @@ target_link_libraries(bigmama
   bigmamalib
   ${JSONCPP_LIBRARY}
 )
+
 install (TARGETS bigmama DESTINATION bin)
