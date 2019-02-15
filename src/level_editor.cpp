@@ -98,4 +98,14 @@ void LevelEditor::activate(const ::sf::RectangleShape& shape,
   m_frames[m_activeFrame].setOutlineColor(::sf::Color::Red);  
 }
 
+std::pair<const Resource *, TexturePtr> LevelEditor::selectedResource()
+{
+  if (frameSelected())
+    return std::make_pair(&resources[m_offset + m_activeFrame],
+        m_resources[m_activeFrame].first);
+  else 
+    return std::pair<const Resource *, TexturePtr>(nullptr, nullptr);
+}
+
+
 };

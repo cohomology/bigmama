@@ -7,7 +7,6 @@
 #include <SFML/OpenGL.hpp>
 
 #include <cassert>
-#include <cstring>
 
 namespace bigmama
 {
@@ -17,11 +16,12 @@ Game::Game(const AssetLibrary& assets,
            unsigned int levelNr)
   : m_settings{16, 8, 8, 3, 0}, m_mode{screen.width(), screen.height()}, 
     m_window{m_mode, "bigmama", sf::Style::Fullscreen, m_settings},
-     m_assets{assets}, m_screen{screen}, m_textures{},
+     m_assets{assets}, m_screen{screen}, m_textureMap{},
   m_elements{}, m_levelNr{levelNr}, m_levelEditMode{false}, 
   m_fontAsset{m_assets.get("FreeMono.ttf")}, m_font{},
   m_editor{nullptr}, m_boundingRectangle{
-      ::sf::Vector2f(m_screen.width(), m_screen.height() - m_screen.statusAreaHeight())} 
+      ::sf::Vector2f(m_screen.width(), m_screen.height() - m_screen.statusAreaHeight())},
+  m_placedItem{}, m_placedItemHover{}
 {
   m_window.setVerticalSyncEnabled(true);
   m_window.setActive(true); 
@@ -53,6 +53,9 @@ void Game::run()
         case sf::Event::MouseButtonPressed:
           mousePress(event);
           break;
+        case sf::Event::MouseMoved:
+          mouseMoved(event);
+          break;
       }
     }
     display();
@@ -71,6 +74,8 @@ void Game::display()
   m_window.draw(m_boundingRectangle);
   drawStatusArea();
   drawGame();
+  if (m_levelEditMode && m_placedItem.first != nullptr)
+    m_window.draw(m_placedItemHover); 
   m_window.display(); 
 }
 
@@ -107,10 +112,21 @@ void Game::mousePress(const sf::Event& event)
   {
     case ::sf::Mouse::Left:
     {
-      if (m_levelEditMode && isInsideStatusArea(position))
+      if (m_levelEditMode)
       {
-        assert(m_editor != nullptr);
-        m_editor->mousePressLeft(position);
+        if (isInsideStatusArea(position))
+        {
+          assert(m_editor != nullptr);
+          m_editor->mousePressLeft(position); 
+        }
+        else if (m_placedItem.first != nullptr)
+        {
+          ::sf::FloatRect bounds 
+            = m_placedItemHover.getGlobalBounds();
+          loadElement(*m_placedItem.first,
+              ::sf::IntRect(bounds.left, bounds.top,
+                bounds.width, bounds.height));
+        }
       }
       break;
     }
@@ -126,6 +142,24 @@ void Game::mousePress(const sf::Event& event)
   }
 }
 
+void Game::mouseMoved(const ::sf::Event& event)
+{
+  ::sf::Vector2u position = ::sf::Vector2u(event.mouseMove.x, 
+      event.mouseMove.y);
+  if (m_levelEditMode && isInsideGameArea(position) 
+      && m_editor->frameSelected())
+  {
+    m_placedItem = m_editor->selectedResource();
+    ::sf::Vector2u frameSize = m_placedItem.second->getSize();
+    m_placedItemHover.setTexture(*m_placedItem.second, true);
+    m_placedItemHover.setPosition(position.x - frameSize.x / 2, 
+      position.y - frameSize.y / 2);
+  }
+  else
+    m_placedItem = std::pair<const Resource *,
+      TexturePtr>(nullptr, nullptr); 
+} 
+
 void Game::drawStatusArea()
 {
   if (m_levelEditMode)
@@ -134,12 +168,6 @@ void Game::drawStatusArea()
     m_editor->draw(m_window);
   }  
 }
-
-struct CompareString
-{
-  bool operator()(const char * first, const char * second) const
-  { return std::strcmp(first, second) < 0; }
-};
 
 std::unique_ptr<Element> Game::createGameElement(
   const Resource& resource,
@@ -168,7 +196,7 @@ std::unique_ptr<Element> Game::createGameElement(
 void Game::reload(unsigned int levelNr)
 {
   m_levelNr = levelNr; 
-  m_textures.clear();
+  m_textureMap.clear();
   m_elements.clear();
   Level level(m_assets, levelNr);
   std::map<const char *, TexturePtr, CompareString> textureMap;
@@ -176,27 +204,34 @@ void Game::reload(unsigned int levelNr)
   {
     assert(element.resource < resources.size());
     const Resource& resource = resources[element.resource];
-    std::vector<TexturePtr> textures;
-    textures.reserve(resource.textures().size()); 
-    for (auto& texture : resource.textures())
-    {
-      auto it = textureMap.find(texture);
-      if (it != textureMap.end())
-        textures.push_back(it->second);
-      else
-      {
-        auto newTexture = std::make_shared<::sf::Texture>(); 
-        auto asset = m_assets.get(texture);
-        newTexture->loadFromMemory(asset->data(), asset->size());
-        textureMap.insert(std::make_pair(texture, newTexture));
-        textures.push_back(newTexture);
-      }
-    }
-    m_elements.push_back(createGameElement(resource, std::move(textures),
-          ::sf::IntRect(element.x, element.y, element.width, element.height)));
+    loadElement(resource, ::sf::IntRect(element.x, element.y, 
+          element.width, element.height));
   }
   m_window.setMouseCursorVisible(m_levelEditMode);
 } 
+
+void Game::loadElement(const Resource& resource,
+                       const ::sf::IntRect& position) 
+{
+  std::vector<TexturePtr> textures;
+  textures.reserve(resource.textures().size()); 
+  for (auto& texture : resource.textures())
+  {
+    auto it = m_textureMap.find(texture);
+    if (it != m_textureMap.end())
+      textures.push_back(it->second);
+    else
+    {
+      auto newTexture = std::make_shared<::sf::Texture>(); 
+      auto asset = m_assets.get(texture);
+      newTexture->loadFromMemory(asset->data(), asset->size());
+      m_textureMap.insert(std::make_pair(texture, newTexture));
+      textures.push_back(newTexture);
+    }
+  } 
+  m_elements.push_back(createGameElement(resource, 
+        std::move(textures), position));
+}
 
 void Game::drawGame()
 {

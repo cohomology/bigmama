@@ -11,6 +11,7 @@ namespace bigmama
 
 class Screen;
 class AssetLibrary;
+class Resource;
 
 class LevelEditor
 {
@@ -28,10 +29,10 @@ public:
   void draw(::sf::RenderWindow& window);
   void mousePressLeft(const ::sf::Vector2f& position); 
   void mousePressRight(const ::sf::Vector2f& position);  
-
-private:
+  std::pair<const Resource *, TexturePtr> selectedResource(); 
   bool frameSelected() const
-  { return m_activeFrame != invalidFrame; }
+  { return m_activeFrame != invalidFrame; } 
+private:
   void activate(const ::sf::RectangleShape& shape,
                 int frameNumber); 
   void deactivateFrame();
@@ -44,8 +45,6 @@ private:
   TextureArray        m_resources;
   unsigned int        m_offset;
   int                 m_activeFrame;
-
-  
 };
 
 } // namespace bigmama

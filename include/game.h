@@ -7,6 +7,7 @@
 #include "screen.h"
 
 #include <SFML/Graphics.hpp>
+#include <cstring> 
 
 namespace bigmama
 {
@@ -15,6 +16,12 @@ class AssetLibrary;
 class Screen;
 class Asset;
 class LevelEditor;
+
+struct CompareString
+{
+  bool operator()(const char * first, const char * second) const
+  { return std::strcmp(first, second) < 0; }
+}; 
 
 class Game
 {
@@ -29,6 +36,7 @@ private:
   void resize(const ::sf::Event& event);
   void keyPress(const ::sf::Event& event);
   void mousePress(const ::sf::Event& event);
+  void mouseMoved(const ::sf::Event& event);
   void drawStatusArea();
   void drawStatusAreaBorder(); 
   void drawGame();
@@ -38,8 +46,14 @@ private:
       const Resource& resource,
       std::vector<TexturePtr>&& textures,
       const ::sf::IntRect& rectangle); 
-  bool isInsideStatusArea(const ::sf::Vector2f& position)
+  template<typename T>
+  bool isInsideStatusArea(const ::sf::Vector2<T>& position)
   { return position.y >= m_screen.height() - m_screen.statusAreaHeight(); }
+  template<typename T>
+  bool isInsideGameArea(const ::sf::Vector2<T>& position)
+  { return !isInsideStatusArea(position); }
+  void loadElement(const Resource& resource,
+                   const ::sf::IntRect& position);
 
 private:
   ::sf::ContextSettings        m_settings;
@@ -48,7 +62,8 @@ private:
 
   const AssetLibrary&          m_assets;
   const Screen&                m_screen; 
-  std::vector<TexturePtr>      m_textures;
+  std::map<const char *, 
+    TexturePtr, CompareString> m_textureMap; 
   std::vector<ElementPtr>      m_elements;
   unsigned int                 m_levelNr; 
   bool                         m_levelEditMode;
@@ -58,6 +73,10 @@ private:
 
   std::unique_ptr<LevelEditor> m_editor;
   ::sf::RectangleShape         m_boundingRectangle;
+  
+  std::pair<const Resource *,
+    TexturePtr      >          m_placedItem;
+  ::sf::Sprite                 m_placedItemHover;
 }; 
 
 }
