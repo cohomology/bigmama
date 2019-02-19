@@ -3,9 +3,13 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    LevelEditor w;
-    w.show();
+  using namespace bigmama;
 
-    return a.exec();
+  QApplication application(argc, argv);
+  LevelEditor levelEditor;
+  levelEditor.setWindowState(Qt::WindowFullScreen);
+  levelEditor.raise();
+  levelEditor.activateWindow();
+  levelEditor.show();
+  return application.exec();
 }

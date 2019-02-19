@@ -3,6 +3,9 @@
 
 #include <QMainWindow>
 
+namespace bigmama
+{
+
 class LevelEditor : public QMainWindow
 {
   Q_OBJECT
@@ -10,6 +13,9 @@ class LevelEditor : public QMainWindow
 public:
   LevelEditor(QWidget *parent = nullptr);
   ~LevelEditor() override;
+  void keyPressEvent(QKeyEvent * event) override;
 };
+
+}
 
 #endif // LEVELEDITOR_H
