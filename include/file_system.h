@@ -26,7 +26,7 @@ private:
 
 class Asset
 {
-  friend class AssetLibrary;
+  friend class FileSystem;
 public:
   Asset(const std::vector<char>&) = delete;
   Asset(std::vector<char>&& data)
@@ -45,14 +45,14 @@ private:
   const std::vector<char> m_data;
 }; 
 
-class AssetLibrary
+class FileSystem
 {
 public:
-  AssetLibrary(const char * calledProgram);
-  ~AssetLibrary();
-  std::unique_ptr<Asset> get(const char * asset) const;
-  std::unique_ptr<Asset> get(const std::string& asset) const
-  { return this->get(asset.c_str()); }
+  FileSystem(const char * calledProgram);
+  ~FileSystem();
+  std::unique_ptr<Asset> getAsset(const char * asset) const;
+  std::unique_ptr<Asset> getAsset(const std::string& asset) const
+  { return this->getAsset(asset.c_str()); }
 }; 
 
 } // namespace bigmama

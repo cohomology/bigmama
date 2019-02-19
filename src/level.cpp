@@ -1,5 +1,5 @@
 #include "level.h"
-#include "assets.h"
+#include "file_system.h"
 
 #include <boost/lexical_cast.hpp>
 #include <cassert>
@@ -84,12 +84,12 @@ void Level::loadLevel(unsigned int levelNr)
 
 void Level::loadLevelFromAssets(const std::string& levelFile)
 {
-  auto asset = m_library.get(levelFile);
+  auto asset = m_library.getAsset(levelFile);
   const char * data = reinterpret_cast<const char*>(asset->data());
   m_reader.parse(data, data + asset->size(), m_root);  
 }
 
-Level::Level(const AssetLibrary& library,
+Level::Level(const FileSystem& library,
              unsigned int levelNr)
   : m_library(library), m_reader(), m_root()
 {

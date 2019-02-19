@@ -1,4 +1,4 @@
-#include "assets.h"
+#include "file_system.h"
 
 #include <physfs.h>
 #include <cassert>
@@ -8,7 +8,7 @@ namespace bigmama
 
 #include "bigmama.pak.cpp"   
 
-AssetLibrary::AssetLibrary(const char * calledProgram)
+FileSystem::FileSystem(const char * calledProgram)
 {
   PHYSFS_init(calledProgram);   
   int result = PHYSFS_mountMemory(assetData, sizeof(assetData), nullptr,
@@ -16,12 +16,12 @@ AssetLibrary::AssetLibrary(const char * calledProgram)
   assert(result != 0);
 }
 
-AssetLibrary::~AssetLibrary()
+FileSystem::~FileSystem()
 {
   PHYSFS_deinit(); 
 }
 
-std::unique_ptr<Asset> AssetLibrary::get(const char * asset) const
+std::unique_ptr<Asset> FileSystem::getAsset(const char * asset) const
 {
   if (!PHYSFS_exists(asset))
     throw AssetNotFound(asset);

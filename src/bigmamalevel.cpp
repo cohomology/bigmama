@@ -1,4 +1,4 @@
-#include "game.h"
+#include "level_editor.h"
 #include "file_system.h"
 #include "level.h"
 #include "screen.h"
@@ -11,8 +11,8 @@ int main(int argc, char *argv[])
   {
     bigmama::Screen screen;
     bigmama::FileSystem assets(argv[0]);
-    bigmama::Game game(assets, screen);
-    game.run();
+    bigmama::LevelEditor levelEditor(assets, screen);
+    levelEditor.run();
   }
   catch(const std::exception& exc)
   {

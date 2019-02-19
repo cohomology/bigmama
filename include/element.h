@@ -9,7 +9,7 @@
 namespace bigmama
 {
 
-class AssetLibrary;
+class FileSystem;
 class Screen;
 class Resource;
 
@@ -27,6 +27,13 @@ public:
   { return m_resource; }
 
   virtual void draw(::sf::RenderWindow& window) = 0; 
+  const ::sf::IntRect& rectangle() 
+  { return m_rectangle; }
+  bool usesTexture(const TexturePtr& ptr) const
+  {
+    return std::find(m_textures.begin(), m_textures.end(),
+        ptr) != m_textures.end();
+  }
 
 protected:
   const Resource&                m_resource;
@@ -50,13 +57,13 @@ typedef std::unique_ptr<Element> ElementPtr;
 class State
 {
 public:
-  State(const AssetLibrary& library,
+  State(const FileSystem& library,
         const Screen& screen,
         unsigned int level = 1);
   void reload(unsigned int level);
   void drawWalls(::sf::RenderWindow& window);
 private:
-  const AssetLibrary&     m_library;
+  const FileSystem&     m_library;
   const Screen&           m_screen;
   std::vector<TexturePtr> m_textures;
   std::vector<ElementPtr> m_elements;

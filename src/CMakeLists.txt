@@ -1,13 +1,15 @@
 list(APPEND BIGMAMA_LIBRARY_SOURCE
-  ${CMAKE_SOURCE_DIR}/src/assets.cpp 
+  ${CMAKE_SOURCE_DIR}/src/file_system.cpp 
+  ${CMAKE_SOURCE_DIR}/src/abstract_game.cpp  
   ${CMAKE_SOURCE_DIR}/src/game.cpp 
   ${CMAKE_SOURCE_DIR}/src/level.cpp 
   ${CMAKE_SOURCE_DIR}/src/element.cpp  
-  ${CMAKE_SOURCE_DIR}/src/level_editor.cpp   
+  ${CMAKE_SOURCE_DIR}/src/asset_chooser_pane.cpp   
   ${CMAKE_SOURCE_DIR}/src/resources.cpp    
+  ${CMAKE_SOURCE_DIR}/src/level_editor.cpp    
 )
 
-find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED) 
+find_package(SFML 2.5 COMPONENTS graphics audio window system REQUIRED) 
 set(OpenGL_GL_PREFERENCE "GLVND") 
 
 find_package(OpenGL REQUIRED)
@@ -40,10 +42,25 @@ target_include_directories(bigmama PUBLIC ${CMAKE_SOURCE_DIR}/include)
 target_link_libraries(bigmama 
   sfml-graphics 
   sfml-audio 
+  sfml-window
+  sfml-system
   OpenGL::OpenGL 
   ${PHYSFS_LIBRARY} 
   bigmamalib
   ${JSONCPP_LIBRARY}
 )
+
+add_executable(bigmamalevel bigmamalevel.cpp)  
+target_include_directories(bigmamalevel PUBLIC ${CMAKE_SOURCE_DIR}/include)
+target_link_libraries(bigmamalevel
+  sfml-graphics 
+  sfml-audio 
+  sfml-window
+  sfml-system
+  OpenGL::OpenGL 
+  ${PHYSFS_LIBRARY} 
+  bigmamalib
+  ${JSONCPP_LIBRARY}
+) 
 
 install (TARGETS bigmama DESTINATION bin)

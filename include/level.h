@@ -9,7 +9,7 @@
 namespace bigmama
 {
 
-class AssetLibrary;
+class FileSystem;
 
 class JsonIterator
 {
@@ -20,7 +20,7 @@ public:
   { }
 
   explicit JsonIterator(
-    const AssetLibrary&   library, 
+    const FileSystem&   library, 
     const ::Json::Value&  value) 
     : m_library(&library), m_value(&value),
     m_counter(0)
@@ -33,7 +33,7 @@ protected:
 
   bool equal(const JsonIterator & other) const;
 
-  const AssetLibrary * m_library; 
+  const FileSystem * m_library; 
   const ::Json::Value * m_value;
   unsigned int m_counter;
 }; 
@@ -61,7 +61,7 @@ public:
   { }
 
   ElementIterator(
-    const AssetLibrary&   library, 
+    const FileSystem&   library, 
     const ::Json::Value&  value) 
     : JsonIterator(library, value)
   { }
@@ -79,19 +79,19 @@ public:
   ElementIterator end()
   { return ElementIterator(); } 
 private:
-  ElementView(const AssetLibrary& library, 
+  ElementView(const FileSystem& library, 
            ::Json::Value       root)            
     : m_library(library), m_root(root)
   { }
 
-  const AssetLibrary& m_library; 
+  const FileSystem& m_library; 
   ::Json::Value  m_root; 
 }; 
 
 class Level
 {
 public:
-  Level(const AssetLibrary& library,
+  Level(const FileSystem& library,
         unsigned int levelNr);
 
   ElementView elements() const
@@ -104,7 +104,7 @@ private:
   void loadLevel(unsigned int levelNr); 
   void loadLevelFromAssets(const std::string& levelFile); 
 
-  const AssetLibrary& m_library;
+  const FileSystem& m_library;
   ::Json::Reader m_reader;
   ::Json::Value  m_root;
 };

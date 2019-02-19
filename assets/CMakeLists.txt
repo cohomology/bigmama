@@ -1,9 +1,11 @@
 find_package(SevenZip REQUIRED)
 
 list(APPEND BIGMAMA_RESOURCE_FILES
-  ${CMAKE_SOURCE_DIR}/assets/stone_grey.png
-  ${CMAKE_SOURCE_DIR}/assets/stone_red.png 
+  ${CMAKE_SOURCE_DIR}/assets/stone_brick1.png   
+  ${CMAKE_SOURCE_DIR}/assets/stone_brick2.png    
   ${CMAKE_SOURCE_DIR}/assets/level_edit_frame.png  
+  ${CMAKE_SOURCE_DIR}/assets/skull.png  
+  ${CMAKE_SOURCE_DIR}/assets/coin.png   
 
   ${CMAKE_SOURCE_DIR}/assets/FreeMono.ttf 
   ${CMAKE_SOURCE_DIR}/assets/template.json 

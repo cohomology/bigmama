@@ -1,51 +1,44 @@
 #ifndef BIGMAMALEVELEDITOR_H
-#define BIGMAMALEVELEDITOR_H 
+#define BIGMAMALEVELEDITOR_H
 
-#include "types.h"
-
-#include <SFML/Graphics.hpp> 
-#include <deque>
+#include "abstract_game.h"
+#include "asset_chooser_pane.h"
 
 namespace bigmama
 {
 
-class Screen;
-class AssetLibrary;
-class Resource;
-
-class LevelEditor
+class LevelEditor : public AbstractGame
 {
-  static constexpr unsigned int frameNumber = 10;
-  static constexpr float frameSize = 64.0; 
-  static constexpr int invalidFrame = -1;  
-
-  typedef std::array<::sf::RectangleShape, frameNumber> FrameArray;
-  typedef std::array<
-    std::pair<TexturePtr, ::sf::Sprite>, frameNumber> TextureArray;
 public:
-  LevelEditor(const AssetLibrary& library,
+  LevelEditor(const FileSystem& library,
               const Screen& screen);
 
-  void draw(::sf::RenderWindow& window);
-  void mousePressLeft(const ::sf::Vector2f& position); 
-  void mousePressRight(const ::sf::Vector2f& position);  
-  std::pair<const Resource *, TexturePtr> selectedResource(); 
-  bool frameSelected() const
-  { return m_activeFrame != invalidFrame; } 
-private:
-  void activate(const ::sf::RectangleShape& shape,
-                int frameNumber); 
-  void deactivateFrame();
-  FrameArray::const_iterator mousePress(const ::sf::Vector2f& position);  
+protected:
+  void display() override;
+  void mousePress(const sf::Event& event) override; 
+  void mouseMoved(const ::sf::Event& event) override; 
+  void updateGame(const ::sf::Time& time) override;
+  void keyPress(const ::sf::Event& event) override; 
+  void close() override; 
+  using AbstractGame::placeElement;
 
-  const AssetLibrary& m_assets;
-  ::sf::Texture       m_editFrame; 
-  ::sf::Sprite        m_editSprite;
-  FrameArray          m_frames;
-  TextureArray        m_resources;
-  unsigned int        m_offset;
-  int                 m_activeFrame;
-};
+private:
+  void mousePressLeft(const ::sf::Vector2f& position); 
+  void mousePressRight(const ::sf::Vector2f& position); 
+  void drawStatusArea(); 
+  void placeElement();
+  void writeToFile(const char * fileName); 
+
+private:
+  AssetChooserPane             m_assetChooserPane;
+  std::pair<const Resource *,
+    TexturePtr      >          m_placedItem;
+  ::sf::RectangleShape         m_placedItemHover;
+  ::sf::Time                   m_autoSaveTime;
+
+  static const char * m_levelFileName;
+}; // class LevelEditor
 
 } // namespace bigmama
-#endif // BIGMAMALEVELEDITOR
+
+#endif // BIGMAMALEVELEDITOR_H

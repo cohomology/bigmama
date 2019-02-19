@@ -1,111 +1,161 @@
 #include "level_editor.h"
-#include "assets.h"
+#include "file_system.h"
 #include "screen.h"
+#include "level.h"
 #include "resources.h"
 
+#include <SFML/OpenGL.hpp>
+
 #include <cassert>
+#include <fstream>
 
 namespace bigmama
 {
 
-LevelEditor::LevelEditor(const AssetLibrary& assets,
+LevelEditor::LevelEditor(const FileSystem& assets, 
                          const Screen& screen)
-  : m_assets(assets), m_editFrame(), m_editSprite(),
-  m_frames(), m_resources(), m_offset(0), m_activeFrame(invalidFrame)
+  : AbstractGame(assets, screen, "bigmamalevel"), m_assetChooserPane(assets,
+      screen), m_placedItem{}, m_placedItemHover{}, m_autoSaveTime{}
 {
-  auto asset = 
-    assets.get("level_edit_frame.png");
-  m_editFrame.loadFromMemory(asset->data(), asset->size());
-  m_editSprite.setTexture(m_editFrame);
-  m_editSprite.setPosition(0, screen.height() - screen.statusAreaHeight());
-  for (unsigned int i = 0; i < frameNumber; ++i)
-  {
-    // draw frames
-    m_frames[i].setSize(::sf::Vector2f(frameSize, frameSize));
-    m_frames[i].setOutlineColor(::sf::Color::Blue);
-    m_frames[i].setOutlineThickness(4);
-    float x =  (i + 1) * static_cast<float>(screen.width()) / (frameNumber + 1)  - frameSize / 2.0 - 1;
-    float y = static_cast<float>(screen.height()) - screen.statusAreaHeight() / 2.0 
-      - frameSize / 2.0 - 1;
-    m_frames[i].move(x, y);
+  reload(0);
+}
 
-    // draw resources
-    if (m_offset + i < resources.size())
-    {
-      const Resource& resource = resources[m_offset + i];
-      auto asset = m_assets.get(resource.textures()[0]);
-      auto texture = std::make_shared<::sf::Texture>();
-      texture->loadFromMemory(asset->data(), asset->size());
-      ::sf::Sprite sprite;
-      sf::Vector2u size = texture->getSize();  
-      sprite.setTexture(*texture, true);
-      sprite.setPosition(x, y);
-      sprite.setScale(static_cast<float>(frameSize) / size.x, 
-          static_cast<float>(frameSize) / size.y);    
-      m_resources[i] = std::make_pair(texture, sprite);
-    }
+void LevelEditor::display()
+{
+  AbstractGame::display();
+  drawStatusArea();
+  if (m_placedItem.first != nullptr)
+    window().draw(m_placedItemHover); 
+}
+
+void LevelEditor::placeElement()
+{
+  if (m_placedItem.first != nullptr)
+  {
+    ::sf::FloatRect floatBounds 
+      = m_placedItemHover.getGlobalBounds();
+    ::sf::IntRect bounds(floatBounds.left, 
+        floatBounds.top, floatBounds.width, 
+        floatBounds.height); 
+    placeElement(*m_placedItem.first, bounds);
   }
 }
 
-void LevelEditor::draw(::sf::RenderWindow& window) 
+void LevelEditor::mousePress(const sf::Event& event)
 {
-  window.draw(m_editSprite);
-  for (auto& frame : m_frames)
-    window.draw(frame);
-  for (auto& resource : m_resources)
-    window.draw(resource.second);
-}
-
-auto LevelEditor::mousePress(const ::sf::Vector2f& position) -> FrameArray::const_iterator 
-{
-  return std::find_if(m_frames.begin(), m_frames.end(), 
-      [&position](const ::sf::Shape& frame) -> bool {
-      return frame.getGlobalBounds().contains(position);
-      });           
-}
-
-void LevelEditor::mousePressLeft(const ::sf::Vector2f& position)  
-{
-  auto frame = mousePress(position);
-  if (frame != m_frames.end())
-    activate(*frame, std::distance(m_frames.cbegin(), frame));
-}
-
-void LevelEditor::mousePressRight(const ::sf::Vector2f& position)  
-{
-  auto frame = mousePress(position);
-  if (frame != m_frames.end())
+  ::sf::Vector2i intPosition = sf::Mouse::getPosition(window());
+  ::sf::Vector2f position = ::sf::Vector2f(intPosition.x, intPosition.y);
+  switch(event.mouseButton.button)
   {
-    auto frameNr = std::distance(m_frames.cbegin(), frame);
-    if (frameNr == m_activeFrame)
-      deactivateFrame();
+    case ::sf::Mouse::Left:
+      mousePressLeft(position);
+      break;
+    case ::sf::Mouse::Right:
+      mousePressRight(position);
+      break;
   }
+}
+
+void LevelEditor::mousePressLeft(const ::sf::Vector2f& position)
+{
+  if (isInsideStatusArea(position))
+    m_assetChooserPane.mousePressLeft(position); 
+  else if (m_placedItem.first != nullptr)
+    placeElement();
+}
+
+void LevelEditor::mousePressRight(const ::sf::Vector2f& position)
+{
+  if (isInsideStatusArea(position))
+    m_assetChooserPane.mousePressRight(position);
+  else
+    deleteElementAtPosition(position);
+}
+
+void LevelEditor::mouseMoved(const ::sf::Event& event)
+{
+  ::sf::Vector2u position = ::sf::Vector2u(event.mouseMove.x, 
+      event.mouseMove.y);
+  if (isInsideGameArea(position) && m_assetChooserPane.frameSelected())
+  {
+    m_placedItem = m_assetChooserPane.selectedResource();
+    ::sf::Vector2u frameSize = m_placedItem.second->getSize();
+    m_placedItemHover.setSize(::sf::Vector2f(frameSize.x - 2, frameSize.y - 2));
+    m_placedItemHover.setOutlineColor(::sf::Color::Black);
+    m_placedItemHover.setFillColor(::sf::Color::Transparent); 
+    m_placedItemHover.setOutlineThickness(1);
+    m_placedItemHover.setPosition(
+        position.x - ( position.x % frameSize.x ) + 1,
+        position.y - ( position.y % frameSize.y ) + 1);
+    if (::sf::Mouse::isButtonPressed(::sf::Mouse::Left))
+      placeElement();
+  }
+  else
+    m_placedItem = std::pair<const Resource *,
+      TexturePtr>(nullptr, nullptr); 
+  if (::sf::Mouse::isButtonPressed(::sf::Mouse::Right))
+    deleteElementAtPosition(::sf::Vector2f(position.x, position.y)); 
 } 
 
-void LevelEditor::deactivateFrame()
+void LevelEditor::keyPress(const ::sf::Event& event)
 {
-  assert(m_activeFrame < frameNumber);
-  m_frames[m_activeFrame].setOutlineColor(::sf::Color::Blue); 
-  m_activeFrame = invalidFrame;
+  switch(event.key.code)
+  {
+    case ::sf::Keyboard::C:
+      reload(0);
+      break;
+    default:
+      m_assetChooserPane.keyPress(event); 
+      break;
+  } 
 }
 
-void LevelEditor::activate(const ::sf::RectangleShape& shape,
-                           int frameNumber)
+void LevelEditor::drawStatusArea()
 {
-  if (frameSelected())
-    deactivateFrame();
-  m_activeFrame = frameNumber;
-  m_frames[m_activeFrame].setOutlineColor(::sf::Color::Red);  
+  m_assetChooserPane.draw(window());
 }
 
-std::pair<const Resource *, TexturePtr> LevelEditor::selectedResource()
+void LevelEditor::writeToFile(const char * fileName)
 {
-  if (frameSelected())
-    return std::make_pair(&resources[m_offset + m_activeFrame],
-        m_resources[m_activeFrame].first);
-  else 
-    return std::pair<const Resource *, TexturePtr>(nullptr, nullptr);
+  ::Json::Value file;
+  ::Json::Value elements(::Json::arrayValue);
+  for (auto& e : this->elements())
+  {
+    const Resource * resource = &e->resource();
+    const ::sf::IntRect& rectangle = e->rectangle();
+    std::ptrdiff_t resourceNr = resource - &resources[0];
+    assert(resourceNr >= 0);
+    ::Json::Value element;
+    element["resource"] = static_cast<unsigned>(resourceNr);
+    element["x"] = rectangle.left;
+    element["y"] = rectangle.top;
+    element["width"] = rectangle.width;
+    element["height"] = rectangle.height;
+    elements.append(element);
+  }
+  file["elements"] = elements;
+  std::ofstream ofs;
+  ofs.open(fileName);
+  ofs << file;
+  ofs.close();
 }
 
+void LevelEditor::updateGame(const ::sf::Time& time) 
+{
+  m_autoSaveTime += time;
+  unsigned seconds = m_autoSaveTime.asSeconds();
+  if (seconds >= 10)
+  {
+    writeToFile(m_levelFileName);
+    m_autoSaveTime = ::sf::seconds(0);
+  }
+}
 
-};
+void LevelEditor::close()
+{
+  writeToFile(m_levelFileName); 
+}
+
+const char * LevelEditor::m_levelFileName = "level.json";
+
+} // namespace bigmama
