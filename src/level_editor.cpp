@@ -13,7 +13,6 @@ LevelEditor::LevelEditor(QWidget *parent)
 
 LevelEditor::~LevelEditor()
 {
-
 }
 
 void LevelEditor::keyPressEvent(QKeyEvent * event) 
