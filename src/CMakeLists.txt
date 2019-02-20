@@ -7,11 +7,13 @@ add_custom_target(bigmama.pak.cpp.trg ALL DEPENDS bigmama.pak.cpp)
 
 find_package(Qt5Widgets REQUIRED)
 find_package(PhysFS REQUIRED) 
+find_package(Boost COMPONENTS system filesystem REQUIRED)
 
 list (APPEND BIGMAMALEVEL_SOURCE 
   ${PROJECT_SOURCE_DIR}/src/level_editor.cpp
   ${PROJECT_SOURCE_DIR}/src/file_system.cpp 
   ${PROJECT_SOURCE_DIR}/src/translation_scope.cpp  
+  ${PROJECT_SOURCE_DIR}/src/level.cpp   
 )
 
 list (APPEND BIGMAMALEVEL_QOBJECT_HEADERS
@@ -38,6 +40,8 @@ add_executable(bigmamalevel bigmamalevel.cpp)
 target_link_libraries (bigmamalevel 
   leveleditor
   ${PHYSFS_LIBRARY}
+  ${Boost_FILESYSTEM_LIBRARY}
+  ${Boost_SYSTEM_LIBRARY} 
 )
 target_include_directories(bigmamalevel PUBLIC
   ${CMAKE_SOURCE_DIR}/include   
