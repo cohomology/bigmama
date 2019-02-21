@@ -11,6 +11,7 @@ find_package(Qt5OpenGL REQUIRED)
 find_package(PhysFS REQUIRED) 
 find_package(Boost COMPONENTS system filesystem REQUIRED)
 find_package(OpenGL)
+find_package(SFML REQUIRED system window graphics)
 
 list (APPEND BIGMAMALEVEL_SOURCE 
   ${PROJECT_SOURCE_DIR}/src/level_editor.cpp
@@ -19,12 +20,14 @@ list (APPEND BIGMAMALEVEL_SOURCE
   ${PROJECT_SOURCE_DIR}/src/level.cpp   
   ${PROJECT_SOURCE_DIR}/src/game_board.cpp    
   ${PROJECT_SOURCE_DIR}/src/asset_chooser_pane.cpp     
+  ${PROJECT_SOURCE_DIR}/src/sfml_canvas.cpp      
 )
 
 list (APPEND BIGMAMALEVEL_QOBJECT_HEADERS
   ${PROJECT_SOURCE_DIR}/include/level_editor.h
   ${PROJECT_SOURCE_DIR}/include/game_board.h 
   ${PROJECT_SOURCE_DIR}/include/asset_chooser_pane.h     
+  ${PROJECT_SOURCE_DIR}/include/sfml_canvas.h      
 )
 
 qt5_wrap_cpp(BIGMAMALEVEL_HEADERS_MOC ${BIGMAMALEVEL_QOBJECT_HEADERS})
@@ -49,8 +52,11 @@ target_link_libraries (bigmamalevel
   ${PHYSFS_LIBRARY}
   ${Boost_FILESYSTEM_LIBRARY}
   ${Boost_SYSTEM_LIBRARY} 
-  ${QT_LIBRARIES} 
-  OpenGL::OpenGL  
+  Qt5::Widgets
+  sfml-graphics 
+  sfml-audio 
+  sfml-window
+  sfml-system 
 )
 target_include_directories(bigmamalevel PUBLIC
   ${CMAKE_SOURCE_DIR}/include   

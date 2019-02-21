@@ -6,6 +6,8 @@
 
 #include <QMainWindow>
 #include <QVBoxLayout>
+#include <QFrame>
+
 #include <memory>
 
 namespace bigmama
@@ -19,9 +21,11 @@ public:
   void keyPressEvent(QKeyEvent *event) override;
 private:
   QWidget          m_centralWidget;
-  GameBoard        m_board;
+  QFrame           m_frame; 
+  GameBoard *      m_board;
   AssetChooserPane m_assetChooser;
   QVBoxLayout      m_layout;
+  
 };
 
 }

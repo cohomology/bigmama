@@ -9,7 +9,7 @@
 class BigMamaLevelApplication final : public QApplication
 {
 public:
-  BigMamaLevelApplication(int argc, char * argv[])
+  BigMamaLevelApplication(int &argc, char **& argv)
     : QApplication(argc, argv)
   { }
   bool notify(QObject* receiver, QEvent* event) override 
@@ -26,7 +26,7 @@ public:
   } 
 };
 
-int main(int argc, char *argv[])
+int main(int argc, char ** argv)
 {
   using namespace bigmama;
   try

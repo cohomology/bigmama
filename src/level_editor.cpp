@@ -8,8 +8,8 @@ namespace bigmama
 
 LevelEditor::LevelEditor(QWidget *parent)
     : QMainWindow(parent), 
-    m_centralWidget(), m_board(), m_assetChooser(), 
-    m_layout()
+    m_centralWidget(), m_frame(), m_board(nullptr), 
+    m_assetChooser(), m_layout()
 {
   setCentralWidget(&m_centralWidget);  
 
@@ -19,14 +19,17 @@ LevelEditor::LevelEditor(QWidget *parent)
   
   QSizePolicy spBoard(QSizePolicy::Preferred, QSizePolicy::Preferred);
   spBoard.setVerticalStretch(9);
-  m_board.setSizePolicy(spBoard);
-  m_layout.addWidget(&m_board);
+  m_frame.setSizePolicy(spBoard);
+  m_layout.addWidget(&m_frame);
 
   QSizePolicy spChooser(QSizePolicy::Preferred, QSizePolicy::Preferred);
   spChooser.setVerticalStretch(1);
   m_assetChooser.setSizePolicy(spChooser);
   m_layout.addWidget(&m_assetChooser);
   m_centralWidget.setLayout(&m_layout);
+
+  m_board = new GameBoard(&m_frame);
+  m_board->show();
 }
 
 void LevelEditor::keyPressEvent(QKeyEvent * event) 
