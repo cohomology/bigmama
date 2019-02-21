@@ -1,6 +1,7 @@
 #include "level_editor.h"
 #include "file_system.h"
 #include "translation_scope.h"
+#include "game_board.h"
 
 #include <iostream>
 #include <QApplication>

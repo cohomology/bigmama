@@ -1,7 +1,12 @@
-#ifndef LEVELEDITOR_H
-#define LEVELEDITOR_H
+#ifndef BIGMAMA_LEVEL_EDITOR_H
+#define BIGMAMA_LEVEL_EDITOR_H
+
+#include "game_board.h"
+#include "asset_chooser_pane.h"
 
 #include <QMainWindow>
+#include <QVBoxLayout>
+#include <memory>
 
 namespace bigmama
 {
@@ -9,13 +14,16 @@ namespace bigmama
 class LevelEditor : public QMainWindow
 {
   Q_OBJECT
-
 public:
   LevelEditor(QWidget *parent = nullptr);
-  ~LevelEditor() override;
-  void keyPressEvent(QKeyEvent * event) override;
+  void keyPressEvent(QKeyEvent *event) override;
+private:
+  QWidget          m_centralWidget;
+  GameBoard        m_board;
+  AssetChooserPane m_assetChooser;
+  QVBoxLayout      m_layout;
 };
 
 }
 
-#endif // LEVELEDITOR_H
+#endif // BIGMAMA_LEVEL_EDITOR_H
