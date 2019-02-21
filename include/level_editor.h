@@ -13,19 +13,21 @@
 namespace bigmama
 {
 
+class FileSystem;
+
 class LevelEditor : public QMainWindow
 {
   Q_OBJECT
 public:
-  LevelEditor(QWidget *parent = nullptr);
+  LevelEditor(FileSystem& fileSystem, 
+              QWidget *parent = nullptr);
   void keyPressEvent(QKeyEvent *event) override;
 private:
+  FileSystem&      m_fileSystem;
   QWidget          m_centralWidget;
-  QFrame           m_frame; 
-  GameBoard *      m_board;
+  GameBoard        m_board;
   AssetChooserPane m_assetChooser;
   QVBoxLayout      m_layout;
-  
 };
 
 }

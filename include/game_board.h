@@ -1,20 +1,25 @@
 #ifndef BIGMAMA_GAME_BOARD_H
 #define BIGMAMA_GAME_BOARD_H
 
-#include "sfml_canvas.h"
+#include <QOpenGLWidget>
+#include <QImage>
 
 namespace bigmama
 {
 
-class GameBoard : public SFMLCanvas
+class FileSystem;
+
+class GameBoard : public QOpenGLWidget
 {
   Q_OBJECT
 public:
-  GameBoard(QWidget *parent = nullptr);
+  GameBoard(FileSystem& fileSystem, QWidget *parent = nullptr);
 
 protected:
-  void onInit() override;
-  void onUpdate() override; 
+  void paintEvent(QPaintEvent * event) override;
+
+private:
+  QImage m_image;
 };
 
 }

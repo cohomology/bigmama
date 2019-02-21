@@ -35,7 +35,7 @@ int main(int argc, char ** argv)
       = std::make_unique<BigMamaLevelApplication>(argc, argv);
     bigmama::FileSystem fileSystem(argv[0]);
     TranslationScope translations(*application, fileSystem);
-    LevelEditor levelEditor;
+    LevelEditor levelEditor(fileSystem);
     levelEditor.setWindowState(Qt::WindowFullScreen);
     levelEditor.raise();
     levelEditor.activateWindow();

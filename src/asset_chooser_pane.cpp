@@ -13,13 +13,9 @@ AssetChooserPane::AssetChooserPane(QWidget *parent)
 
 void AssetChooserPane::paintEvent(QPaintEvent *event)
 {
-  QPainter painter;
-  painter.begin(this);
-  painter.setRenderHint(QPainter::Antialiasing);
-  painter.setPen(Qt::red);
-  QRect rect = QRect(geometry());
-  painter.drawRect(rect);
-  painter.end(); 
+  glViewport(0, 0, width(), height());
+  glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
 } 
 
 }
