@@ -9,8 +9,8 @@ namespace bigmama
 GameBoard::GameBoard(FileSystem& fileSystem, QWidget *parent)
   : QOpenGLWidget(parent)
 { 
-  setContentsMargins(-1, -1, -1, 0); 
   setAutoFillBackground(false);
+  setContentsMargins(-1, -1, -1, 0); 
   auto asset = fileSystem.getAsset("level_edit_frame.png");
   m_image = QImage::fromData(
       reinterpret_cast<const uchar*>(asset->data()), 
