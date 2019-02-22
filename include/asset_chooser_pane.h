@@ -6,15 +6,12 @@
 namespace bigmama
 {
 
-class AssetChooserPane : public QOpenGLWidget
+class AssetChooserPane : public QWidget
 {
   Q_OBJECT
 
 public:
   AssetChooserPane(QWidget *parent = nullptr);
-
-protected:
-  void paintEvent(QPaintEvent *event) override;
 };
 
 }

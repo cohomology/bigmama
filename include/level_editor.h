@@ -21,10 +21,17 @@ public:
               QWidget *parent = nullptr);
   void keyPressEvent(QKeyEvent *event) override;
 private slots:
+  void newAction();
+  void openAction();
+  void saveAction();
+  void saveAsAction();
+
 private:
   void createActions();
   void createLayout();  
   void createMenus();
+  void saveLevelAs(const QString& fileName);
+  void openFile(const QString& fileName);
 
   FileSystem&       m_fileSystem;
   QWidget           m_centralWidget;
@@ -34,7 +41,12 @@ private:
   QMenu *           m_fileMenu;
   QMenu *           m_helpMenu;
   QAction *         m_exitAction;
+  QAction *         m_newAction;
+  QAction *         m_openAction;
+  QAction *         m_saveAction;
+  QAction *         m_saveAsAction;
   QAction *         m_aboutQt;
+  QString           m_levelFileName;
 };
 
 }

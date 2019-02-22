@@ -29,8 +29,18 @@ ElementDescriptor ElementIterator::dereference() const
 
 ElementIterator ElementView::begin() 
 {
-  return ElementIterator(m_root["elements"].toArray().begin());
+  return ElementIterator(m_array.begin());
 } 
+
+ElementIterator ElementView::end() 
+{
+  return ElementIterator(m_array.end());
+} 
+
+ElementView::ElementView(const FileSystem& library, 
+                         const QJsonValue& root)            
+  : m_library(library), m_array(root["elements"].toArray())
+{ } 
 
 std::string Level::generateLevelFileName(unsigned int levelNr)
 {

@@ -28,6 +28,7 @@ class ElementIterator
       , QJsonArray::const_iterator 
       , ElementDescriptor
       , boost::forward_traversal_tag   
+      , ElementDescriptor
     >
 {
 private:
@@ -50,16 +51,13 @@ class ElementView
   friend class Level;
 public:
   ElementIterator begin();
-  ElementIterator end()
-  { return ElementIterator(); } 
+  ElementIterator end();
 private:
   ElementView(const FileSystem& library, 
-              const QJsonValue& root)            
-    : m_library(library), m_root(root)
-  { }
+              const QJsonValue& root);            
 
   const FileSystem& m_library; 
-  const QJsonValue& m_root; 
+  const QJsonArray m_array; 
 }; 
 
 class Level

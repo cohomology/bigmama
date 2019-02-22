@@ -1,21 +1,23 @@
 #include "asset_chooser_pane.h"
 
 #include <QPainter>
+#include <QPushButton>
 
 namespace bigmama
 {
 
 AssetChooserPane::AssetChooserPane(QWidget *parent)
-    : QOpenGLWidget(parent)
+    : QWidget(parent)
 {
   setContentsMargins(-1, 0, -1, -1);
+  
+  QPalette pal = palette();
+
+  // set black background
+  pal.setColor(QPalette::Background, Qt::black);
+  setAutoFillBackground(true);
+  setPalette(pal);
 }
 
-void AssetChooserPane::paintEvent(QPaintEvent *event)
-{
-  glViewport(0, 0, width(), height());
-  glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
-} 
 
 }

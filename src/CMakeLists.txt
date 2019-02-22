@@ -19,6 +19,8 @@ list (APPEND BIGMAMALEVEL_SOURCE
   ${PROJECT_SOURCE_DIR}/src/level.cpp   
   ${PROJECT_SOURCE_DIR}/src/game_board.cpp    
   ${PROJECT_SOURCE_DIR}/src/asset_chooser_pane.cpp     
+  ${PROJECT_SOURCE_DIR}/src/element.cpp      
+  ${PROJECT_SOURCE_DIR}/src/resources.cpp       
 )
 
 list (APPEND BIGMAMALEVEL_QOBJECT_HEADERS
