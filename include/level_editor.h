@@ -6,8 +6,6 @@
 
 #include <QMainWindow>
 #include <QVBoxLayout>
-#include <QFrame>
-
 #include <memory>
 
 namespace bigmama
@@ -22,12 +20,21 @@ public:
   LevelEditor(FileSystem& fileSystem, 
               QWidget *parent = nullptr);
   void keyPressEvent(QKeyEvent *event) override;
+private slots:
 private:
-  FileSystem&      m_fileSystem;
-  QWidget          m_centralWidget;
-  GameBoard        m_board;
-  AssetChooserPane m_assetChooser;
-  QVBoxLayout      m_layout;
+  void createActions();
+  void createLayout();  
+  void createMenus();
+
+  FileSystem&       m_fileSystem;
+  QWidget           m_centralWidget;
+  GameBoard         m_board;
+  AssetChooserPane  m_assetChooser;
+  QVBoxLayout       m_layout;
+  QMenu *           m_fileMenu;
+  QMenu *           m_helpMenu;
+  QAction *         m_exitAction;
+  QAction *         m_aboutQt;
 };
 
 }
