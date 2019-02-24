@@ -46,7 +46,7 @@ public:
   GameBoard(FileSystem& fileSystem, QWidget *parent = nullptr);
 
 protected:
-  void paintEvent(QPaintEvent * event) override;
+  void paintEvent(QPaintEvent *event) override;
 
 private:
   void reload(unsigned int levelNr);

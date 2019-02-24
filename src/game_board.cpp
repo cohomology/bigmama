@@ -73,7 +73,6 @@ void GameBoard::loadElement(const Resource& resource,
       bool result = newTexture->loadFromData(
           reinterpret_cast<const uchar*>(asset->data()), 
           asset->size());
-      QSize size = this->size();
       assert(result);
       m_textureMap.insert(std::make_pair(texture, newTexture));
       textures.push_back(newTexture);

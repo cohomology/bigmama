@@ -1,5 +1,6 @@
 #include "level_editor.h"
 #include "file_system.h"
+#include "resources.h"
 
 #include <QKeyEvent>
 #include <QApplication>
@@ -9,6 +10,7 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QScrollArea>
+#include <QToolBar>
 
 namespace bigmama
 {
@@ -21,6 +23,7 @@ LevelEditor::LevelEditor(FileSystem& fileSystem, QWidget *parent)
   createLayout();
   createActions();
   createMenus();
+  createToolbar();
 }
 
 void LevelEditor::createLayout()
@@ -28,10 +31,17 @@ void LevelEditor::createLayout()
   setWindowState(Qt::WindowMaximized);
   m_scrollArea = new QScrollArea(this);
   m_scrollArea->setWidgetResizable(true);
-  setCentralWidget(m_scrollArea);
+  
   m_scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
   m_scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-  m_scrollArea->setWidget(&m_board);
+  m_scrollArea->setWidget(&m_board); 
+
+  m_centralWidget = new QWidget;
+  setCentralWidget(m_centralWidget); 
+  m_layout = new QVBoxLayout;
+
+  m_centralWidget->setLayout(m_layout);
+  m_layout->addWidget(m_scrollArea);
 }                    
 
 void LevelEditor::createActions()
@@ -88,6 +98,46 @@ void LevelEditor::createMenus()
   m_helpMenu = menuBar()->addMenu(tr("&Help"));
   m_helpMenu->addAction(m_aboutQt); 
 } 
+
+void LevelEditor::createToolbar()
+{
+  m_assetChooser = new QToolBar;
+  m_assetChooser->setIconSize(QSize(32, 32));
+  m_assetChooser->setToolButtonStyle(Qt::ToolButtonIconOnly); 
+  m_layout->addWidget(m_assetChooser);
+  unsigned int counter = 0;
+  for (auto& resource : resources)
+  {
+    assert(!resource.textures().empty());
+    auto asset = m_fileSystem.getAsset(
+        *resource.textures().begin());
+    QImage image; 
+    image.loadFromData( 
+       reinterpret_cast<const uchar*>(asset->data()), 
+       asset->size()); 
+    QPixmap pixmap;
+    pixmap.convertFromImage(image);
+    QAction * action = m_assetChooser->addAction(QIcon(pixmap),
+        QString(resource.description()),
+        [counter, this, &resource](bool) {
+          chooseAsset(resource, counter);
+    });
+    action->setCheckable(true);
+    ++counter;
+  }
+}
+
+void LevelEditor::chooseAsset(const Resource& resource,
+                              unsigned int actionNr)
+{
+  unsigned int counter = 0;
+  for (auto& action: m_assetChooser->actions())
+  {
+    if (counter != actionNr)
+      action->setChecked(false);
+    ++counter;
+  }
+}
 
 void LevelEditor::keyPressEvent(QKeyEvent * event) 
 {

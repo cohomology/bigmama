@@ -18,7 +18,7 @@ list (APPEND BIGMAMALEVEL_SOURCE
   ${PROJECT_SOURCE_DIR}/src/translation_scope.cpp  
   ${PROJECT_SOURCE_DIR}/src/level.cpp   
   ${PROJECT_SOURCE_DIR}/src/game_board.cpp    
-  ${PROJECT_SOURCE_DIR}/src/asset_chooser_pane.cpp     
+  ${PROJECT_SOURCE_DIR}/src/game_board_edit.cpp     
   ${PROJECT_SOURCE_DIR}/src/element.cpp      
   ${PROJECT_SOURCE_DIR}/src/resources.cpp       
 )
@@ -26,7 +26,7 @@ list (APPEND BIGMAMALEVEL_SOURCE
 list (APPEND BIGMAMALEVEL_QOBJECT_HEADERS
   ${PROJECT_SOURCE_DIR}/include/level_editor.h
   ${PROJECT_SOURCE_DIR}/include/game_board.h 
-  ${PROJECT_SOURCE_DIR}/include/asset_chooser_pane.h     
+  ${PROJECT_SOURCE_DIR}/include/game_board_edit.h  
 )
 
 qt5_wrap_cpp(BIGMAMALEVEL_HEADERS_MOC ${BIGMAMALEVEL_QOBJECT_HEADERS})

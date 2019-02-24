@@ -1,8 +1,7 @@
 #ifndef BIGMAMA_LEVEL_EDITOR_H
 #define BIGMAMA_LEVEL_EDITOR_H
 
-#include "game_board.h"
-#include "asset_chooser_pane.h"
+#include "game_board_edit.h"
 
 #include <QMainWindow>
 #include <QVBoxLayout>
@@ -32,14 +31,20 @@ private:
   void createActions();
   void createLayout();  
   void createMenus();
+  void createToolbar();
   void saveLevelAs(const QString& fileName);
   void openFile(const QString& fileName);
+  void chooseAsset(const Resource& resource,
+                   unsigned int actionNr);
 
   FileSystem&       m_fileSystem;
   QScrollArea *     m_scrollArea;
-  GameBoard         m_board;
+  EditableGameBoard m_board;
+  QWidget *         m_centralWidget;
+  QVBoxLayout *     m_layout;
   QMenu *           m_fileMenu;
   QMenu *           m_helpMenu;
+  QToolBar *        m_assetChooser;
   QAction *         m_exitAction;
   QAction *         m_newAction;
   QAction *         m_openAction;
