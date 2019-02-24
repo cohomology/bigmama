@@ -12,6 +12,7 @@ GameBoard::GameBoard(FileSystem& fileSystem, QWidget *parent)
 { 
   setAutoFillBackground(false);
   setContentsMargins(-1, -1, -1, 0); 
+  setMinimumSize(1920, 960);
   reload(0);
 }
 
@@ -72,6 +73,7 @@ void GameBoard::loadElement(const Resource& resource,
       bool result = newTexture->loadFromData(
           reinterpret_cast<const uchar*>(asset->data()), 
           asset->size());
+      QSize size = this->size();
       assert(result);
       m_textureMap.insert(std::make_pair(texture, newTexture));
       textures.push_back(newTexture);

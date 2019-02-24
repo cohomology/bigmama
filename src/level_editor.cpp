@@ -8,38 +8,30 @@
 #include <QAction> 
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QScrollArea>
 
 namespace bigmama
 {
 
 LevelEditor::LevelEditor(FileSystem& fileSystem, QWidget *parent)
     : QMainWindow(parent), 
-    m_fileSystem(fileSystem), m_centralWidget(), m_board(fileSystem), 
-    m_assetChooser(), m_layout(), m_fileMenu(), m_helpMenu(),
-    m_exitAction()
+    m_fileSystem(fileSystem), m_board(fileSystem), 
+    m_fileMenu(), m_helpMenu(), m_exitAction()
 {
-  setCentralWidget(&m_board);  
-  // createLayout();
+  createLayout();
   createActions();
   createMenus();
 }
 
 void LevelEditor::createLayout()
 {
-  m_layout.setSpacing(0);
-  m_layout.setMargin(0);  
-  m_layout.setContentsMargins(0, 0, 0, 0);
-
-  /* QSizePolicy spBoard(QSizePolicy::Preferred, QSizePolicy::Preferred); */
-  /* spBoard.setVerticalStretch(9); */
-  /* m_board.setSizePolicy(spBoard); */
-  m_layout.addWidget(&m_board);
-
-  /* QSizePolicy spChooser(QSizePolicy::Preferred, QSizePolicy::Preferred); */
-  /* spChooser.setVerticalStretch(1); */
-  /* m_assetChooser.setSizePolicy(spChooser); */
-  m_layout.addWidget(&m_assetChooser);
-  m_centralWidget.setLayout(&m_layout); 
+  setWindowState(Qt::WindowMaximized);
+  m_scrollArea = new QScrollArea(this);
+  m_scrollArea->setWidgetResizable(true);
+  setCentralWidget(m_scrollArea);
+  m_scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+  m_scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+  m_scrollArea->setWidget(&m_board);
 }                    
 
 void LevelEditor::createActions()

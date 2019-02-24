@@ -8,6 +8,8 @@
 #include <QVBoxLayout>
 #include <memory>
 
+QT_FORWARD_DECLARE_CLASS(QScrollArea)
+
 namespace bigmama
 {
 
@@ -34,10 +36,8 @@ private:
   void openFile(const QString& fileName);
 
   FileSystem&       m_fileSystem;
-  QWidget           m_centralWidget;
+  QScrollArea *     m_scrollArea;
   GameBoard         m_board;
-  AssetChooserPane  m_assetChooser;
-  QVBoxLayout       m_layout;
   QMenu *           m_fileMenu;
   QMenu *           m_helpMenu;
   QAction *         m_exitAction;

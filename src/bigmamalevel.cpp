@@ -36,7 +36,8 @@ int main(int argc, char ** argv)
     bigmama::FileSystem fileSystem(argv[0]);
     TranslationScope translations(*application, fileSystem);
     LevelEditor levelEditor(fileSystem);
-    levelEditor.setFixedSize(1920, 1200);
+    levelEditor.setSizePolicy(QSizePolicy::Expanding, 
+        QSizePolicy::Expanding);
     levelEditor.raise();
     levelEditor.activateWindow();
     levelEditor.show();
