@@ -105,7 +105,6 @@ void LevelEditor::createToolbar()
   m_assetChooser->setIconSize(QSize(32, 32));
   m_assetChooser->setToolButtonStyle(Qt::ToolButtonIconOnly); 
   m_layout->addWidget(m_assetChooser);
-  unsigned int counter = 0;
   for (auto& resource : resources)
   {
     assert(!resource.textures().empty());
@@ -118,24 +117,23 @@ void LevelEditor::createToolbar()
     QPixmap pixmap;
     pixmap.convertFromImage(image);
     QAction * action = m_assetChooser->addAction(QIcon(pixmap),
-        QString(resource.description()),
-        [counter, this, &resource](bool) {
-          chooseAsset(resource, counter);
+        QString(resource.description()));
+    connect(action, &QAction::triggered, this, 
+        [this, &resource, action](bool checked) {
+        if (checked)
+          chooseAsset(resource, *action);
     });
     action->setCheckable(true);
-    ++counter;
   }
 }
 
 void LevelEditor::chooseAsset(const Resource& resource,
-                              unsigned int actionNr)
+                              const QAction& triggeringAction)
 {
-  unsigned int counter = 0;
   for (auto& action: m_assetChooser->actions())
   {
-    if (counter != actionNr)
+    if (action != &triggeringAction)
       action->setChecked(false);
-    ++counter;
   }
 }
 

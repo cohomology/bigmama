@@ -6,9 +6,9 @@ add_custom_command(OUTPUT bigmama.pak.cpp
 add_custom_target(bigmama.pak.cpp.trg ALL DEPENDS bigmama.pak.cpp)  
 
 set(OpenGL_GL_PREFERENCE "GLVND")  
-find_package(Qt5Widgets REQUIRED)
+find_package(Qt5Widgets 5.10 REQUIRED)
 find_package(Qt5OpenGL REQUIRED) 
-find_package(PhysFS REQUIRED) 
+find_package(PhysFS 3.0 REQUIRED) 
 find_package(Boost COMPONENTS system filesystem REQUIRED)
 find_package(OpenGL)
 

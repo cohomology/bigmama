@@ -35,7 +35,7 @@ private:
   void saveLevelAs(const QString& fileName);
   void openFile(const QString& fileName);
   void chooseAsset(const Resource& resource,
-                   unsigned int actionNr);
+                   const QAction& triggeringAction);
 
   FileSystem&       m_fileSystem;
   QScrollArea *     m_scrollArea;
