@@ -32,8 +32,7 @@ void LevelEditor::createLayout()
   m_scrollArea = new QScrollArea(this);
   m_scrollArea->setWidgetResizable(true);
   
-  m_scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-  m_scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+  shrinkToFit();
   m_scrollArea->setWidget(&m_board); 
 
   m_centralWidget = new QWidget;
@@ -82,8 +81,13 @@ void LevelEditor::createActions()
   m_exitAction->setStatusTip(tr("About Qt"));
   connect(m_aboutQt, &QAction::triggered, this, 
       std::bind(&QMessageBox::aboutQt, this, tr("About Qt")));
-}
 
+  m_shrinkToFitAction = new QAction(tr("S&hrink to fit"), this);
+  m_shrinkToFitAction->setCheckable(true);
+  m_shrinkToFitAction->setChecked(true);
+  connect(m_shrinkToFitAction, &QAction::triggered, this, 
+      &LevelEditor::shrinkToFitAction);
+}
 
 void LevelEditor::createMenus()
 {
@@ -94,6 +98,9 @@ void LevelEditor::createMenus()
   m_fileMenu->addAction(m_saveAsAction);  
   m_fileMenu->addSeparator();
   m_fileMenu->addAction(m_exitAction);
+
+  m_viewMenu = menuBar()->addMenu(tr("&View"));
+  m_viewMenu->addAction(m_shrinkToFitAction);
 
   m_helpMenu = menuBar()->addMenu(tr("&Help"));
   m_helpMenu->addAction(m_aboutQt); 
@@ -210,6 +217,26 @@ void LevelEditor::saveLevelAs(const QString& fileName)
 void LevelEditor::openFile(const QString& filename)
 {
 
+}
+
+void LevelEditor::shrinkToFitAction(bool enabled)
+{
+  enabled ? shrinkToFit() : enableScrolling();
+  m_board.repaint(); 
+}
+
+void LevelEditor::shrinkToFit()
+{
+  m_scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  m_scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff); 
+  m_board.shrinkToFit(true);
+}
+
+void LevelEditor::enableScrolling()
+{
+  m_scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+  m_scrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded); 
+  m_board.shrinkToFit(false);
 }
 
 }

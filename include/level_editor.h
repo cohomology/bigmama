@@ -26,6 +26,7 @@ private slots:
   void openAction();
   void saveAction();
   void saveAsAction();
+  void shrinkToFitAction(bool checked);
 
 private:
   void createActions();
@@ -36,6 +37,8 @@ private:
   void openFile(const QString& fileName);
   void chooseAsset(const Resource& resource,
                    const QAction& triggeringAction);
+  void shrinkToFit();
+  void enableScrolling();
 
   FileSystem&       m_fileSystem;
   QScrollArea *     m_scrollArea;
@@ -43,6 +46,7 @@ private:
   QWidget *         m_centralWidget;
   QVBoxLayout *     m_layout;
   QMenu *           m_fileMenu;
+  QMenu *           m_viewMenu;
   QMenu *           m_helpMenu;
   QToolBar *        m_assetChooser;
   QAction *         m_exitAction;
@@ -51,6 +55,7 @@ private:
   QAction *         m_saveAction;
   QAction *         m_saveAsAction;
   QAction *         m_aboutQt;
+  QAction *         m_shrinkToFitAction;
   QString           m_levelFileName;
 };
 

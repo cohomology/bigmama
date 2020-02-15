@@ -45,6 +45,9 @@ class GameBoard : public QOpenGLWidget
 public:
   GameBoard(FileSystem& fileSystem, QWidget *parent = nullptr);
 
+  void shrinkToFit(bool shrinkToFit) 
+  { m_shrinkToFit = shrinkToFit; }
+
 protected:
   void paintEvent(QPaintEvent *event) override;
 
@@ -68,6 +71,7 @@ private:
   FileSystem& m_fileSystem;
   TextureMap m_textureMap; 
   ElementSet m_elements; 
+  bool m_shrinkToFit;
 };
 
 }
